@@ -1,0 +1,114 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(936,5): warning MSB8027: Two or more files with the name of cMemoryBlock.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\..\..\common\memdatstruct\cMemoryBlock.cpp, ..\..\..\dstruct\mmemory\cMemoryBlock.cpp.
+  test.cpp
+D:\skola\common/datatype/tuple/cTuple.h(1169): warning C4477: 'sprintf' : format string '%f' requires an argument of type 'double', but variadic argument 1 has type 'int'
+D:\skola\common/datatype/tuple/cTuple.h(2309): warning C4552: '<<': operator has no effect; expected operator with side-effect
+D:\skola\common/datatype/tuple/cTuple.h(2319): warning C4552: '<<': operator has no effect; expected operator with side-effect
+D:\skola\dstruct/paged/queryprocessing/cRangeQueryConfig.h(22): warning C4091: 'typedef ': ignored on left of 'dstruct::paged::QueryType::QueryTypes' when no variable is declared
+D:\skola\dstruct/paged/rtree/cRTreeConst.h(27): warning C4091: 'typedef ': ignored on left of 'cQueryType::QueryType' when no variable is declared
+D:\skola\dstruct/paged/rtree/cRTreeConst.h(32): warning C4091: 'typedef ': ignored on left of 'Find::FindMBR' when no variable is declared
+D:\skola\dstruct/paged/rtree/cRTreeConst.h(38): warning C4091: 'typedef ': ignored on left of 'Compression::Comp' when no variable is declared
+D:\skola\dstruct/paged/rtree/cRTreeConst.h(44): warning C4091: 'typedef ': ignored on left of 'Reduction::Reduce' when no variable is declared
+D:\skola\dstruct/paged/rtree/cRTreeConst.h(50): warning C4091: 'typedef ': ignored on left of 'Split::Splits' when no variable is declared
+D:\skola\common/datatype/tuple/cMBRectangle.h(51): warning C4091: 'typedef ': ignored on left of 'common::datatype::tuple::Processing::Compare' when no variable is declared
+D:\skola\common/data/cDataCollection.h(16): warning C4091: 'typedef ': ignored on left of 'cCollection::Collect' when no variable is declared
+D:\skola\common/data/cDataCollection.h(21): warning C4091: 'typedef ': ignored on left of 'Computer::Collect' when no variable is declared
+D:\skola\common/datatype/cBasicType.h(458): warning C4311: 'type cast': pointer truncation from 'char *' to 'common::uint'
+  D:\skola\common/datatype/cBasicType.h(444): note: while compiling class template member function 'common::uint cBasicType<char *>::HashValue(const char *,common::uint,common::uint)'
+  D:\skola\common/datatype/cCharString.h(10): note: see reference to class template instantiation 'cBasicType<char *>' being compiled
+D:\skola\dstruct/paged/b+tree/cB+TreeNode.h(987): warning C4552: '-': operator has no effect; expected operator with side-effect
+  D:\skola\dstruct/paged/b+tree/cB+TreeNode.h(832): note: while compiling class template member function 'bool dstruct::paged::bptree::cBpTreeNode<TKey>::ScanLeafNode_Btree_seq(unsigned int,dstruct::paged::sBatchRQ *,common::memorystructures::cLinkedList<unsigned int> *,dstruct::paged::core::cTreeItemStream<tKey_FixedLen> *,unsigned int,dstruct::paged::cRQBuffers<TItem> *,unsigned int *,dstruct::paged::core::cNodeBuffers<TKey> *)'
+          with
+          [
+              TItem=TKey,
+              TKey=TKey
+          ]
+  D:\skola\dstruct/paged/b+tree/cB+TreeNode.h(809): note: see reference to function template instantiation 'bool dstruct::paged::bptree::cBpTreeNode<TKey>::ScanLeafNode_Btree_seq(unsigned int,dstruct::paged::sBatchRQ *,common::memorystructures::cLinkedList<unsigned int> *,dstruct::paged::core::cTreeItemStream<tKey_FixedLen> *,unsigned int,dstruct::paged::cRQBuffers<TItem> *,unsigned int *,dstruct::paged::core::cNodeBuffers<TKey> *)' being compiled
+          with
+          [
+              TItem=TKey,
+              TKey=TKey
+          ]
+  D:\skola\dstruct/paged/b+tree/cB+TreeNode.h(799): note: while compiling class template member function 'bool dstruct::paged::bptree::cBpTreeNode<TKey>::ScanLeafNode(unsigned int,dstruct::paged::sBatchRQ *,dstruct::paged::core::cTreeItemStream<tKey_FixedLen> *,dstruct::paged::cRangeQueryConfig *,dstruct::paged::cRQBuffers<TItem> *,dstruct::paged::cQueryProcStat *)'
+          with
+          [
+              TItem=TKey
+          ]
+  D:\skola\dstruct/paged/queryprocessing/cRangeQueryProcessor.h(238): note: see reference to function template instantiation 'bool dstruct::paged::bptree::cBpTreeNode<TKey>::ScanLeafNode(unsigned int,dstruct::paged::sBatchRQ *,dstruct::paged::core::cTreeItemStream<tKey_FixedLen> *,dstruct::paged::cRangeQueryConfig *,dstruct::paged::cRQBuffers<TItem> *,dstruct::paged::cQueryProcStat *)' being compiled
+          with
+          [
+              TItem=TKey
+          ]
+  D:\skola\dstruct/paged/queryprocessing/cRangeQueryProcessor.h(214): note: while compiling class template member function 'bool dstruct::paged::cRangeQueryProcessor<TKey,TNode,TLeafNode>::RangeQuery_DFS(const dstruct::paged::tNodeIndex &,common::uint,dstruct::paged::sBatchRQ *,dstruct::paged::cRangeQueryConfig *,dstruct::paged::cRangeQueryContext *,dstruct::paged::core::cTreeItemStream<TKey> *,dstruct::paged::cRQBuffers<TKey> *,dstruct::paged::cQueryProcStat *)'
+          with
+          [
+              TKey=TKey,
+              TNode=dstruct::paged::bptree::cBpTreeNode<TKey>,
+              TLeafNode=dstruct::paged::bptree::cBpTreeNode<TKey>
+          ]
+  D:\skola\dstruct/paged/queryprocessing/cRangeQueryProcessor.h(866): note: see reference to function template instantiation 'bool dstruct::paged::cRangeQueryProcessor<TKey,TNode,TLeafNode>::RangeQuery_DFS(const dstruct::paged::tNodeIndex &,common::uint,dstruct::paged::sBatchRQ *,dstruct::paged::cRangeQueryConfig *,dstruct::paged::cRangeQueryContext *,dstruct::paged::core::cTreeItemStream<TKey> *,dstruct::paged::cRQBuffers<TKey> *,dstruct::paged::cQueryProcStat *)' being compiled
+          with
+          [
+              TKey=TKey,
+              TNode=dstruct::paged::bptree::cBpTreeNode<TKey>,
+              TLeafNode=dstruct::paged::bptree::cBpTreeNode<TKey>
+          ]
+  D:\skola\dstruct/paged/queryprocessing/cRangeQueryProcessor.h(638): note: while compiling class template member function 'void dstruct::paged::cRangeQueryProcessor<TKey,TNode,TLeafNode>::RangeQuery_pre(dstruct::paged::sBatchRQ *,dstruct::paged::cRangeQueryConfig *,dstruct::paged::cRQBuffers<TKey> *)'
+          with
+          [
+              TKey=TKey,
+              TNode=dstruct::paged::bptree::cBpTreeNode<TKey>,
+              TLeafNode=dstruct::paged::bptree::cBpTreeNode<TKey>
+          ]
+  D:\skola\dstruct/paged/queryprocessing/cRangeQueryProcessor.h(180): note: see reference to function template instantiation 'void dstruct::paged::cRangeQueryProcessor<TKey,TNode,TLeafNode>::RangeQuery_pre(dstruct::paged::sBatchRQ *,dstruct::paged::cRangeQueryConfig *,dstruct::paged::cRQBuffers<TKey> *)' being compiled
+          with
+          [
+              TKey=TKey,
+              TNode=dstruct::paged::bptree::cBpTreeNode<TKey>,
+              TLeafNode=dstruct::paged::bptree::cBpTreeNode<TKey>
+          ]
+  D:\skola\dstruct/paged/queryprocessing/cRangeQueryProcessor.h(166): note: while compiling class template member function 'dstruct::paged::core::cTreeItemStream<tKey_FixedLen> *dstruct::paged::cRangeQueryProcessor<TKey,TNode,TLeafNode>::RangeQuery(dstruct::paged::sBatchRQ *,dstruct::paged::cRangeQueryConfig *,dstruct::paged::cRangeQueryContext *,dstruct::paged::cQueryProcStat *)'
+          with
+          [
+              TKey=TKey,
+              TNode=dstruct::paged::bptree::cBpTreeNode<TKey>,
+              TLeafNode=dstruct::paged::bptree::cBpTreeNode<TKey>
+          ]
+  D:\skola\dstruct/paged/queryprocessing/cRangeQueryProcessor.h(153): note: see reference to function template instantiation 'dstruct::paged::core::cTreeItemStream<tKey_FixedLen> *dstruct::paged::cRangeQueryProcessor<TKey,TNode,TLeafNode>::RangeQuery(dstruct::paged::sBatchRQ *,dstruct::paged::cRangeQueryConfig *,dstruct::paged::cRangeQueryContext *,dstruct::paged::cQueryProcStat *)' being compiled
+          with
+          [
+              TKey=TKey,
+              TNode=dstruct::paged::bptree::cBpTreeNode<TKey>,
+              TLeafNode=dstruct::paged::bptree::cBpTreeNode<TKey>
+          ]
+  D:\skola\dstruct/paged/b+tree/cCommonB+Tree.h(150): note: while compiling class template member function 'dstruct::paged::bptree::cCommonBpTree<dstruct::paged::bptree::cBpTreeNode<TKey>,dstruct::paged::bptree::cBpTreeNode<TKey>,TKey>::cCommonBpTree(void)'
+          with
+          [
+              TKey=TKey
+          ]
+  D:\skola\dstruct/paged/b+tree/cB+Tree.h(38): note: see reference to function template instantiation 'dstruct::paged::bptree::cCommonBpTree<dstruct::paged::bptree::cBpTreeNode<TKey>,dstruct::paged::bptree::cBpTreeNode<TKey>,TKey>::cCommonBpTree(void)' being compiled
+          with
+          [
+              TKey=TKey
+          ]
+  D:\skola\dstruct/paged/b+tree/cB+Tree.h(38): note: while compiling class template member function 'dstruct::paged::bptree::cBpTree<TKey>::cBpTree(void)'
+  test.cpp(382): note: see reference to function template instantiation 'dstruct::paged::bptree::cBpTree<TKey>::cBpTree(void)' being compiled
+  test.cpp(325): note: see reference to class template instantiation 'dstruct::paged::bptree::cBpTree<TKey>' being compiled
+D:\skola\dstruct/paged/b+tree/cB+TreeNode.h(1159): warning C4552: '-': operator has no effect; expected operator with side-effect
+  D:\skola\dstruct/paged/b+tree/cB+TreeNode.h(1004): note: while compiling class template member function 'bool dstruct::paged::bptree::cBpTreeNode<TKey>::ScanLeafNode_Btree_bin(unsigned int,dstruct::paged::sBatchRQ *,common::memorystructures::cLinkedList<unsigned int> *,dstruct::paged::core::cTreeItemStream<tKey_FixedLen> *,unsigned int,dstruct::paged::cRQBuffers<TItem> *,unsigned int *,dstruct::paged::core::cNodeBuffers<TKey> *)'
+          with
+          [
+              TItem=TKey,
+              TKey=TKey
+          ]
+  D:\skola\dstruct/paged/b+tree/cB+TreeNode.h(812): note: see reference to function template instantiation 'bool dstruct::paged::bptree::cBpTreeNode<TKey>::ScanLeafNode_Btree_bin(unsigned int,dstruct::paged::sBatchRQ *,common::memorystructures::cLinkedList<unsigned int> *,dstruct::paged::core::cTreeItemStream<tKey_FixedLen> *,unsigned int,dstruct::paged::cRQBuffers<TItem> *,unsigned int *,dstruct::paged::core::cNodeBuffers<TKey> *)' being compiled
+          with
+          [
+              TItem=TKey,
+              TKey=TKey
+          ]
+  cBitArray.obj : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
+Release\cMemoryBlock.obj : warning LNK4042: object specified more than once; extras ignored
+  Generating code
+  Finished generating code
+  btree.vcxproj -> D:\skola\bakalářka\na pokusy\btree_test\Release\btree.exe
+  btree.vcxproj -> D:\skola\bakalářka\na pokusy\btree_test\Release\btree.pdb (Full PDB)

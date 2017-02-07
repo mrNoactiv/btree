@@ -1,0 +1,421 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="VTune|Win32">
+      <Configuration>VTune</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="VTune|x64">
+      <Configuration>VTune</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{EAD0CD87-932A-4F79-9FDB-A34877AC07B0}</ProjectGuid>
+    <RootNamespace>btree</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='VTune|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='VTune|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '10.0'">v100</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '11.0'">v110</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '12.0'">v120</PlatformToolset>
+    <PlatformToolset Condition="'$(VisualStudioVersion)' == '14.0'">v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='VTune|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='VTune|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='VTune|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='VTune|x64'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='VTune|Win32'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Configuration)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='VTune|x64'">$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\common;..\..\..\common\stream;..\..\..\dstruct\mmemory;..\..\..\dstruct\paged\datacache;..\..\..\dstruct\paged\datacache\hash;..\..\..\dstruct\paged\core;..\..\..\dstruct\paged\b+tree;..\..\..\common\random;..\..\..\common\datatype;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\common;..\..\..\common\stream;..\..\..\dstruct\mmemory;..\..\..\dstruct\paged\datacache;..\..\..\dstruct\paged\datacache\hash;..\..\..\dstruct\paged\core;..\..\..\dstruct\paged\b+tree;..\..\..\common\random;..\..\..\common\datatype;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <AdditionalDependencies>C:\Javalib\lib\vs-2015\x64\Release DLL\antlr4-runtime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\common;..\..\..\common\stream;..\..\..\dstruct\mmemory;..\..\..\dstruct\paged\datacache;..\..\..\dstruct\paged\datacache\hash;..\..\..\dstruct\paged\core;..\..\..\dstruct\paged\b+tree;..\..\..\common\random;..\..\..\common\datatype;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/D "NDEBUG" %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <Optimization>Full</Optimization>
+    </ClCompile>
+    <Link>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <Profile>true</Profile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='VTune|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\common;..\..\..\common\stream;..\..\..\dstruct\mmemory;..\..\..\dstruct\paged\datacache;..\..\..\dstruct\paged\datacache\hash;..\..\..\dstruct\paged\core;..\..\..\dstruct\paged\b+tree;..\..\..\common\random;..\..\..\common\datatype;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/D "NDEBUG" %(AdditionalOptions)</AdditionalOptions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <OmitFramePointers>false</OmitFramePointers>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+      <SubSystem>Console</SubSystem>
+      <FixedBaseAddress>false</FixedBaseAddress>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\common;..\..\..\common\stream;..\..\..\dstruct\mmemory;..\..\..\dstruct\paged\datacache;..\..\..\dstruct\paged\datacache\hash;..\..\..\dstruct\paged\core;..\..\..\dstruct\paged\b+tree;..\..\..\common\random;..\..\..\common\datatype;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+    </ClCompile>
+    <Link>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <Profile>true</Profile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='VTune|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\..\..;..\..\..\common;..\..\..\common\stream;..\..\..\dstruct\mmemory;..\..\..\dstruct\paged\datacache;..\..\..\dstruct\paged\datacache\hash;..\..\..\dstruct\paged\core;..\..\..\dstruct\paged\b+tree;..\..\..\common\random;..\..\..\common\datatype;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\common\cBitArray.h" />
+    <ClInclude Include="..\..\..\common\cCommon.h" />
+    <ClInclude Include="..\..\..\common\cFastBitArray.h" />
+    <ClInclude Include="..\..\..\common\compression\cCoderCommon.h" />
+    <ClInclude Include="..\..\..\common\compression\cEliasDeltaDecodeTab.h" />
+    <ClInclude Include="..\..\..\common\compression\cEliasDeltaEncodeTab.h" />
+    <ClInclude Include="..\..\..\common\compression\cEliasFibonacciDecodeTab.h" />
+    <ClInclude Include="..\..\..\common\compression\cEliasFibonacciEncodeTab.h" />
+    <ClInclude Include="..\..\..\common\compression\cFibonacci2.h" />
+    <ClInclude Include="..\..\..\common\compression\cFibonacci2DecodeTab.h" />
+    <ClInclude Include="..\..\..\common\compression\cFibonacci2EncodeTab.h" />
+    <ClInclude Include="..\..\..\common\compression\cFibonacci3.h" />
+    <ClInclude Include="..\..\..\common\compression\cFibonacci3DecodeTab.h" />
+    <ClInclude Include="..\..\..\common\compression\cFibonacci3EncodeTab.h" />
+    <ClInclude Include="..\..\..\common\compression\Coder.h" />
+    <ClInclude Include="..\..\..\common\compression\cUniversalCoderEliasDelta.h" />
+    <ClInclude Include="..\..\..\common\compression\cUniversalCoderEliasFibonacci.h" />
+    <ClInclude Include="..\..\..\common\compression\cUniversalCoderFastEliasDelta.h" />
+    <ClInclude Include="..\..\..\common\compression\cUniversalCoderFastEliasFibonacci.h" />
+    <ClInclude Include="..\..\..\common\compression\cUniversalCoderFastFibonacci2.h" />
+    <ClInclude Include="..\..\..\common\compression\cUniversalCoderFastFibonacci3.h" />
+    <ClInclude Include="..\..\..\common\compression\cUniversalCoderFibonacci2.h" />
+    <ClInclude Include="..\..\..\common\compression\cUniversalCoderFibonacci3.h" />
+    <ClInclude Include="..\..\..\common\compression\cUniversalCoderFixedLength.h" />
+    <ClInclude Include="..\..\..\common\datatype\cBasicType.h" />
+    <ClInclude Include="..\..\..\common\cBitString.h" />
+    <ClInclude Include="..\..\..\common\datatype\cCharString.h" />
+    <ClInclude Include="..\..\..\common\datatype\cComparator.h" />
+    <ClInclude Include="..\..\..\common\datatype\cDataVarLen.h" />
+    <ClInclude Include="..\..\..\common\datatype\cDTDescriptor.h" />
+    <ClInclude Include="..\..\..\common\datatype\tuple\cCommonNTuple.h" />
+    <ClInclude Include="..\..\..\common\datatype\tuple\cHNTuple.h" />
+    <ClInclude Include="..\..\..\common\datatype\tuple\cMbrSideSizeOrder.h" />
+    <ClInclude Include="..\..\..\common\datatype\tuple\cSpaceDescriptor.h" />
+    <ClInclude Include="..\..\..\common\datatype\tuple\cTuple.h" />
+    <ClInclude Include="..\..\..\common\data\cDataCollection.h" />
+    <ClInclude Include="..\..\..\common\data\cTuplesGenerator.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\cArray.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\cArray2.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\cBlockLinkedList.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\cHeapMemoryBlock.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\cList.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\cMemoryBlock.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\cMemoryManager.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\cStack.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\cStack2.h" />
+    <ClInclude Include="..\..\..\common\memdatstruct\MeteredSection.h" />
+    <ClInclude Include="..\..\..\common\memorystructures\cArray.h" />
+    <ClInclude Include="..\..\..\common\memorystructures\cHashTable.h" />
+    <ClInclude Include="..\..\..\common\memorystructures\cLinkedList.h" />
+    <ClInclude Include="..\..\..\common\memorystructures\cStack.h" />
+    <ClInclude Include="..\..\..\common\random\cAbstractRandomGenerator.h" />
+    <ClInclude Include="..\..\..\common\random\cGaussRandomGenerator.h" />
+    <ClInclude Include="..\..\..\common\stream\cCharStream.h" />
+    <ClInclude Include="..\..\..\common\cCRCStatic.h" />
+    <ClInclude Include="..\..\..\common\datatype\cDataType.h" />
+    <ClInclude Include="..\..\..\common\cMemory.h" />
+    <ClInclude Include="..\..\..\common\cNumber.h" />
+    <ClInclude Include="..\..\..\common\stream\cFileStream.h" />
+    <ClInclude Include="..\..\..\common\stream\cStream.h" />
+    <ClInclude Include="..\..\..\common\cString.h" />
+    <ClInclude Include="..\..\..\common\random\cUniformRandomGenerator.h" />
+    <ClInclude Include="..\..\..\common\czech.h" />
+    <ClInclude Include="..\..\..\common\force.h" />
+    <ClInclude Include="..\..\..\common\data\tDataGenerator.h" />
+    <ClInclude Include="..\..\..\common\utils\cCounter.h" />
+    <ClInclude Include="..\..\..\common\utils\cHistogram.h" />
+    <ClInclude Include="..\..\..\common\utils\cTimer.h" />
+    <ClInclude Include="..\..\..\dstruct\mmemory\cMemoryBlock.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\b+tree\cB+Tree.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\b+tree\cB+TreeConst.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\b+tree\cB+TreeHeader.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\b+tree\cB+TreeNode.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\b+tree\cB+TreeNodeHeader.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\b+tree\cCommonB+Tree.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cBucketHeader.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cBucketHeaderStorage.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cBulkLoad.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cBulkLoadArray.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cDSCriticalException.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cDSFalseSetupException.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cDStructConst.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cDStructHeader.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cMemoryPool.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cNodeBuffers.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cNodeItem.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cCacheStatistics.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cItemStream.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cNode.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cNodeCache.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cNodeHeader.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cObjTreeItem.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cPagedTree.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cPersistentArray.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cQueryResult.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cQueryStatistics.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cQuickDB.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cTreeHeader.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cTreeItemStream.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cTreeNode.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cTreeNodeHeader.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cTreeNode_coding.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cTreeNode_rebuild.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cTreeNode_ri.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\cTreeNode_SubNode.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\core\sCoverRecord.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\cQueryProcStat.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\cRangeQueryConfig.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\cRangeQueryContext.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\cRangeQueryProcessor.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\cRangeQueryProcessorConstants.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\cRangeQueryProcessor_CUDA.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\cRQBuffers.h" />
+    <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\sBatchRQ.h" />
+    <ClInclude Include="cColumn.h" />
+    <ClInclude Include="cTranslator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\common\cBitArray.cpp" />
+    <ClCompile Include="..\..\..\common\cCommon.cpp" />
+    <ClCompile Include="..\..\..\common\cFastBitArray.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cCoderCommon.cpp" />
+    <ClCompile Include="..\..\..\common\compression\Coder.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cUniversalCoderEliasDelta.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cUniversalCoderEliasFibonacci.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cUniversalCoderFastEliasDelta.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cUniversalCoderFastEliasFibonacci.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cUniversalCoderFastFibonacci2.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cUniversalCoderFastFibonacci3.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cUniversalCoderFibonacci2.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cUniversalCoderFibonacci3.cpp" />
+    <ClCompile Include="..\..\..\common\compression\cUniversalCoderFixedLength.cpp" />
+    <ClCompile Include="..\..\..\common\datatype\cBasicType.cpp" />
+    <ClCompile Include="..\..\..\common\cBitString.cpp" />
+    <ClCompile Include="..\..\..\common\datatype\cDTDescriptor.cpp" />
+    <ClCompile Include="..\..\..\common\datatype\tuple\cHNTuple.cpp" />
+    <ClCompile Include="..\..\..\common\datatype\tuple\cMbrSideSizeOrder.cpp" />
+    <ClCompile Include="..\..\..\common\datatype\tuple\cSpaceDescriptor.cpp" />
+    <ClCompile Include="..\..\..\common\datatype\tuple\cTuple.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\cArray.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\cArray2.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\cBlockLinkedList.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\cHeapMemoryBlock.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\cList.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\cMemoryBlock.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\cMemoryManager.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\cStack.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\cStack2.cpp" />
+    <ClCompile Include="..\..\..\common\memdatstruct\MeteredSection.cpp" />
+    <ClCompile Include="..\..\..\common\random\cGaussRandomGenerator.cpp" />
+    <ClCompile Include="..\..\..\common\stream\cCharStream.cpp" />
+    <ClCompile Include="..\..\..\common\datatype\cDataType.cpp" />
+    <ClCompile Include="..\..\..\common\cMemory.cpp" />
+    <ClCompile Include="..\..\..\common\cNumber.cpp" />
+    <ClCompile Include="..\..\..\common\cString.cpp" />
+    <ClCompile Include="..\..\..\common\random\cUniformRandomGenerator.cpp" />
+    <ClCompile Include="..\..\..\common\data\tDataGenerator.cpp" />
+    <ClCompile Include="..\..\..\common\stream\cFileStream.cpp" />
+    <ClCompile Include="..\..\..\common\utils\cCounter.cpp" />
+    <ClCompile Include="..\..\..\common\utils\cHistogram.cpp" />
+    <ClCompile Include="..\..\..\common\utils\cTimer.cpp" />
+    <ClCompile Include="..\..\..\dstruct\mmemory\cMemoryBlock.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cBucketHeader.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cBucketHeaderStorage.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cDStructHeader.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cMemoryPool.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cCacheStatistics.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cNode.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cNodeCache.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cNodeHeader.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cQueryStatistics.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cQuickDB.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cTreeHeader.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\core\cTreeNodeHeader.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\queryprocessing\cQueryProcStat.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\queryprocessing\cRangeQueryConfig.cpp" />
+    <ClCompile Include="..\..\..\dstruct\paged\queryprocessing\cRangeQueryContext.cpp" />
+    <ClCompile Include="ngramtest.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='VTune|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='VTune|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='VTune|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='VTune|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="test_multirangequery.cpp" />
+    <ClCompile Include="test_thread.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='VTune|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='VTune|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
