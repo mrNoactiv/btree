@@ -23,6 +23,7 @@ public:
 	int GetPosition();
 	TypeOfTranslator GetType();
 	vector<cColumn*>GetColumns();
+	const char * GetTableName();
 
 
 };
@@ -176,5 +177,10 @@ inline TypeOfTranslator cTranslator::GetType()
 inline vector<cColumn*> cTranslator::GetColumns()
 {
 	return *columns;
+}
+
+inline const char* cTranslator::GetTableName()
+{
+	return cTableName;
 }
 

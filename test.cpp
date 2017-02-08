@@ -18,7 +18,7 @@ const unsigned int DOMAIN_MAX = ITEM_COUNT;    //  Maximum value for random gene
 
 const unsigned int CACHE_SIZE = 20000;
 const unsigned int BLOCK_SIZE = /* 2048; */ 8192;
-const unsigned int MAX_NODE_INMEM_SIZE = 1.5 * BLOCK_SIZE;//edit z 1.25 na 1.5
+const unsigned int MAX_NODE_INMEM_SIZE = 1.25 * BLOCK_SIZE;//edit z 1.25 na 1.5
 
 // defines the length of the inserting tuples
 const unsigned int TUPLE_LENGTHS[] = { 5 };
@@ -132,15 +132,15 @@ int main()
 
 
 
-	
-	
 
-	
+
+
+
 
 
 
 	//cBasicType<cInt> aa = cInt();
-	cDataType *typesPokus[] = { new cInt(), new cInt() };
+	/*cDataType *typesPokus[] = { new cInt(), new cInt() };
 
 	cSpaceDescriptor * SDPokusRadek = new cSpaceDescriptor(2, new tKey_VarLen(), typesPokus, false);//sd radku
 
@@ -151,7 +151,7 @@ int main()
 	cTupRadek->SetValue(1, 13, SDPokusRadek);//hodnota radku
 
 
-	
+
 
 	char* ch = cTupRadek->GetData();
 
@@ -166,6 +166,9 @@ int main()
 	//printf("%d", GetInt(cTupRadekKopie, 0, SDPokusTabulka));
 	//char a= cCommonNTuple<char>::GetCChar(cTupRadekKopie, 0, SDPokusRadek);
 	int a = cCommonNTuple<char>::GetInt(cTupRadekKopie, 1, SDPokusRadek);
+	*/
+
+
 
 
 	/*/.////----------------------------------------*/
@@ -237,6 +240,16 @@ int main()
 	homoTuple->SetValue(4, 'a', homoSD);
 
 
+	/*
+	cSpaceDescriptor * homoSD = new cSpaceDescriptor(5, new tKey_FixedLen(), new cChar(), false);
+	tKey_FixedLen* homoTuple = new cTuple(homoSD);
+
+	homoTuple->SetValue(0, 'a', homoSD);
+	homoTuple->SetValue(1, 'l', homoSD);
+	homoTuple->SetValue(2, 'o', homoSD);
+	homoTuple->SetValue(3, 'h', homoSD);
+	homoTuple->SetValue(4, 'a', homoSD);
+	*/
 
 
 
@@ -289,32 +302,68 @@ int main()
 	//std::vector<std::string>paramWithSize = { "CHAR","FLOAT" };
 
 
-	
-	
-	//std::getline(std::cin, query);
-	query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)";
 
-	cTranslator *translator = new cTranslator();
+
+	//std::getline(std::cin, query);
+	//query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)";
+	query = "create table ahoj(ID INT NOT NULL,AGE INT)";
+	cTranslator *translator = new cTranslator();//instance překladače
+	std::vector<cTuple*> v;//prázný vektor který se přetvoří na haldu jako rekace na create table
+	cBpTree<cTuple> *mIndex;//prázdné tělo stromu strom
+
+
+	cSpaceDescriptor * SD = new cSpaceDescriptor(2, new cTuple(), new cInt(), false);
+	cTuple* haldaTuple1 = new cTuple(SD);
+	cTuple* haldaTuple2 = new cTuple(SD);
 
 	translator->SetType(query);
 
 	if (translator->GetType() == TypeOfTranslator::CREATE)
 	{
-		translator->TranlateCreate(query, translator->GetPosition());
+		translator->TranlateCreate(query, translator->GetPosition());//překladad cretae table
+		/*
+			std::vector<cColumn*>originalColumns = translator->GetColumns();
+			columnsHeap = translator->GetColumns();
+			std:make_heap(columnsHeap.begin(), columnsHeap.end());*/
 
-		
-	std::vector<cColumn*>v = translator->GetColumns();
-	
-	std:make_heap(v.begin(), v.end());
+	std:make_heap(v.begin(), v.end());//vytvoření haldy na vektor
 
 
+		//vytváření b-stromu
+		cBpTreeHeader<cTuple> *mHeader = new cBpTreeHeader<cTuple>(translator->GetTableName(), BLOCK_SIZE, SD, SD->GetTypeSize(), SD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
+		mHeader->SetRuntimeMode(RUNTIME_MODE);
+		mHeader->SetCodeType(CODETYPE);
+		mHeader->SetHistogramEnabled(HISTOGRAMS);
+		mHeader->SetInMemCacheSize(INMEMCACHE_SIZE);
 
+
+		mIndex = new cBpTree<cTuple>();
+		if (!mIndex->Create(mHeader, quickDB))
+		{
+			printf("TestCreate: creation failed!\n");
+		}
 	}
 	else
 	{
 		cout << "command not found" << endl;
 	}
 
+	//vložení do haldy
+
+
+
+	haldaTuple1->SetValue(0, 1, SD);
+	haldaTuple1->SetValue(1, 25, SD);
+
+	haldaTuple2->SetValue(0, 2, SD);
+	haldaTuple2->SetValue(1, 30, SD);
+
+
+	v.push_back(haldaTuple1);
+	mIndex->Insert(*haldaTuple1, haldaTuple1->GetData());
+
+	v.push_back(haldaTuple2);
+	mIndex->Insert(*haldaTuple2, haldaTuple2->GetData());
 
 
 
@@ -323,25 +372,9 @@ int main()
 	//create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)
 	//create table ahoj(column1 INT NOT NULL,column1 INT NOT NULL,column1 INT NOT NULL)
 
-	int dataSize= translator->GetColumns().size();
 	
-		
-
-		cBpTreeHeader<tKey_FixedLen> *mHeader_FixedLen = new cBpTreeHeader<tKey_FixedLen>("hue", BLOCK_SIZE, SDHet2, SDHet2->GetTypeSize(), DATA_LENGTH, false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
-		mHeader_FixedLen->SetRuntimeMode(RUNTIME_MODE);
-		mHeader_FixedLen->SetCodeType(CODETYPE);
-		mHeader_FixedLen->SetHistogramEnabled(HISTOGRAMS);
-		mHeader_FixedLen->SetInMemCacheSize(INMEMCACHE_SIZE);
-
-		cBpTree<tKey_FixedLen> *mIndex_FixedLen = new cBpTree<tKey_FixedLen>();
-		if (!mIndex_FixedLen->Create(mHeader_FixedLen, quickDB))
-		{
-			printf("TestCreate: creation failed!\n");
-		}
-
-		mIndex_FixedLen->Insert(*cTupN, cTupN->GetData());
-
-		mIndex_FixedLen->DeleteDimDistribution();
+	
+	
 		
 		
 
