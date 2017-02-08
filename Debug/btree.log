@@ -1,4 +1,5 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(936,5): warning MSB8027: Two or more files with the name of cMemoryBlock.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\..\..\common\memdatstruct\cMemoryBlock.cpp, ..\..\..\dstruct\mmemory\cMemoryBlock.cpp.
   test.cpp
+Debug\cMemoryBlock.obj : warning LNK4042: object specified more than once; extras ignored
   btree.vcxproj -> D:\skola\bakalarka\pokusy\btree_test\Debug\btree.exe
   btree.vcxproj -> D:\skola\bakalarka\pokusy\btree_test\Debug\btree.pdb (Full PDB)

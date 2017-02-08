@@ -303,9 +303,9 @@ int main()
 		translator->TranlateCreate(query, translator->GetPosition());
 
 		
-		//std::vector<cColumn*>v = translator->GetColumns();
+	std::vector<cColumn*>v = translator->GetColumns();
 	
-	//std:make_heap(v.begin(), v.end());
+	std:make_heap(v.begin(), v.end());
 
 
 

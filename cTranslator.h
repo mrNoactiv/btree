@@ -5,7 +5,7 @@
 #include "cColumn.h"
 
 
-enum TypeOfTranslator { CREATE=0, ALTER=1 };
+enum TypeOfTranslator { CREATE = 0, ALTER = 1 };
 class cTranslator
 {
 private:
@@ -13,7 +13,7 @@ private:
 	unsigned int position;
 	unsigned int iteration;
 	const char * cTableName;
-	std::vector<cColumn>columns;
+	std::vector<cColumn*>*columns;
 	TypeOfTranslator type;
 
 public:
@@ -22,12 +22,12 @@ public:
 	void TranlateCreate(string input, int position);
 	int GetPosition();
 	TypeOfTranslator GetType();
-	vector<cColumn>GetColumns();
-	
+	vector<cColumn*>GetColumns();
+
 
 };
 
-cTranslator::cTranslator():position(0),iteration(0), cTableName(NULL), columns(NULL)
+cTranslator::cTranslator() :position(0), iteration(0), cTableName(NULL), columns(NULL)
 {
 
 }
@@ -43,34 +43,37 @@ inline void cTranslator::SetType(string input)
 
 inline void cTranslator::TranlateCreate(string input, int position)
 {
-	
+
 	string TEMPTable;
 	while (input.find("(", position) != position)//vyparsování názvu tabulky, dokud nenajde (
 	{
 		TEMPTable.insert(0, 1, input.at(position));
 		position++;
 	}
-	std::reverse(TEMPTable.begin(), TEMPTable.end());//překlopení názvu tabulky
+	std::reverse(TEMPTable.begin(), TEMPTable.end());//preklopení názvu tabulky
 	cTableName = TEMPTable.c_str();
 
 	position++;
+
+	columns = new vector<cColumn*>();
 
 	do
 	{
 		if (iteration > 0)
 		{
 			position++;
+			
 		}
 
-		cColumn column;
+		cColumn* column= new cColumn();
 		string TEMPType;
 		string TMPSize;
 		while (input.find(" ", position) != position)//vyhledání mezery po názvu sloupce
 		{
-			column.name.insert(0, 1, input.at(position));
+			column->name.insert(0, 1, input.at(position));
 			position++;
 		}
-		std::reverse(column.name.begin(), column.name.end());//překlopení názvu sloupce
+		std::reverse(column->name.begin(), column->name.end());//preklopení názvu sloupce
 		position++;
 
 
@@ -88,8 +91,8 @@ inline void cTranslator::TranlateCreate(string input, int position)
 			withSize = true;
 		}
 
-		std::reverse(TEMPType.begin(), TEMPType.end());//překlopení datového typu sloupce
-		column.cType = cBasicType<cDataType*>::GetType(TEMPType);
+		std::reverse(TEMPType.begin(), TEMPType.end());//preklopení datového typu sloupce
+		column->cType = cBasicType<cDataType*>::GetType(TEMPType);
 
 		//position++;
 
@@ -102,53 +105,53 @@ inline void cTranslator::TranlateCreate(string input, int position)
 				position++;
 			}
 
-			std::reverse(TMPSize.begin(), TMPSize.end());//překlopení datového typu sloupce
-			column.size = std::stoi(TMPSize);
-			if (column.cType->GetCode() == 'n')//pokud je typ tuple(VARCHAR)
+			std::reverse(TMPSize.begin(), TMPSize.end());//preklopení datového typu sloupce
+			column->size = std::stoi(TMPSize);
+			if (column->cType->GetCode() == 'n')//pokud je typ tuple(VARCHAR)
 			{
 				cDataType ** ptr;
-				ptr = new cDataType*[column.size];
+				ptr = new cDataType*[column->size];
 
-				for (int i = 0; i < column.size; i++)
+				for (int i = 0; i < column->size; i++)
 				{
 					ptr[i] = new cChar();
 				}
-				column.columnSD = new cSpaceDescriptor(column.size, new cNTuple(), ptr, false);//SD tuplu				
+				column->columnSD = new cSpaceDescriptor(column->size, new cNTuple(), ptr, false);//SD tuplu				
 			}
 			else
 			{
-				column.columnSD = NULL;
+				column->columnSD = NULL;
 			}
 			position++;
 		}
 		else
 		{
-			column.size = NULL;
-			column.columnSD = NULL;
+			column->size = NULL;
+			column->columnSD = NULL;
 		}
 
 
-		if (input.find("NOT NULL", position+1) == position+1)
+		if (input.find("NOT NULL", position + 1) == position + 1)
 		{
-			column.notNull = true;
+			column->notNull = true;
 			position = position + 9;
 		}
 		else
 		{
-			column.notNull = false;
+			column->notNull = false;
 
 		}
 		if (input.find("PRIMARY KEY", position + 1) == position + 1)
 		{
-			column.primaryKey = true;
+			column->primaryKey = true;
 			position = position + 12;
-			column.notNull = true;
+			column->notNull = true;
 		}
 		else
 		{
-			column.primaryKey = false;
+			column->primaryKey = false;
 		}
-		columns.push_back(column);
+		columns->push_back(column);
 		iteration++;
 
 
@@ -170,8 +173,8 @@ inline TypeOfTranslator cTranslator::GetType()
 	return type;
 }
 
-inline vector<cColumn> cTranslator::GetColumns()
+inline vector<cColumn*> cTranslator::GetColumns()
 {
-	return columns;
+	return *columns;
 }
 
