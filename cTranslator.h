@@ -15,6 +15,9 @@ private:
 	const char * cTableName;
 	std::vector<cColumn*>*columns;
 	TypeOfTranslator type;
+	unsigned int numberOfColumns;
+	cSpaceDescriptor * SD;
+	bool homogenous=true;
 
 public:
 	cTranslator();
@@ -24,11 +27,13 @@ public:
 	TypeOfTranslator GetType();
 	vector<cColumn*>GetColumns();
 	const char * GetTableName();
+	unsigned int GetNumberofColumns();
+	void CreateFixSpaceDescriptor();
 
 
 };
 
-cTranslator::cTranslator() :position(0), iteration(0), cTableName(NULL), columns(NULL)
+cTranslator::cTranslator() :position(0), iteration(0), cTableName(NULL), columns(NULL), numberOfColumns(0),SD(NULL)
 {
 
 }
@@ -57,7 +62,7 @@ inline void cTranslator::TranlateCreate(string input, int position)
 	position++;
 
 	columns = new vector<cColumn*>();
-
+	cDataType *CheckType;
 	do
 	{
 		if (iteration > 0)
@@ -69,6 +74,8 @@ inline void cTranslator::TranlateCreate(string input, int position)
 		cColumn* column= new cColumn();
 		string TEMPType;
 		string TMPSize;
+		
+		
 		while (input.find(" ", position) != position)//vyhledání mezery po názvu sloupce
 		{
 			column->name.insert(0, 1, input.at(position));
@@ -93,7 +100,20 @@ inline void cTranslator::TranlateCreate(string input, int position)
 		}
 
 		std::reverse(TEMPType.begin(), TEMPType.end());//preklopení datového typu sloupce
+		
 		column->cType = cBasicType<cDataType*>::GetType(TEMPType);
+		
+		if (iteration > 0 && homogenous==true)
+		{
+			if (column->cType->GetCode() != CheckType->GetCode())
+				homogenous = false;
+			else
+				homogenous = true;		
+		}
+		
+		CheckType=column->cType;
+
+
 
 		//position++;
 
@@ -153,8 +173,12 @@ inline void cTranslator::TranlateCreate(string input, int position)
 			column->primaryKey = false;
 		}
 		columns->push_back(column);
+		
 		iteration++;
+		numberOfColumns++;
 
+		
+		
 
 	} while (input.find(")", position) != position);
 
@@ -183,4 +207,19 @@ inline const char* cTranslator::GetTableName()
 {
 	return cTableName;
 }
+
+inline unsigned int cTranslator::GetNumberofColumns()
+{
+	return numberOfColumns;
+}
+
+inline void cTranslator::CreateFixSpaceDescriptor()
+{
+
+	
+	SD = new cSpaceDescriptor(numberOfColumns, new cTuple(), new cInt(), false);
+
+}
+
+
 

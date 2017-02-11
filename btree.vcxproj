@@ -326,6 +326,7 @@
     <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\cRQBuffers.h" />
     <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\sBatchRQ.h" />
     <ClInclude Include="cColumn.h" />
+    <ClInclude Include="cTable.h" />
     <ClInclude Include="cTranslator.h" />
   </ItemGroup>
   <ItemGroup>

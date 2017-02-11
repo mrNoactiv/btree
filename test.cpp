@@ -9,6 +9,7 @@
 #include <vector>
 #include "cTranslator.h"
 #include "cColumn.h"
+#include "cTable.h"
 
 using namespace common::random;
 using namespace common::data;
@@ -306,39 +307,46 @@ int main()
 
 	//std::getline(std::cin, query);
 	//query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)";
-	query = "create table ahoj(ID INT NOT NULL,AGE INT)";
-	cTranslator *translator = new cTranslator();//instance překladače
+	query = "create table ahoj(ID INT NOT NULL,AGE INT,KIDS INT)";
+
+
+
+	/*cTranslator *translator = new cTranslator();//instance překladače
 	std::vector<cTuple*> v;//prázný vektor který se přetvoří na haldu jako rekace na create table
 	cBpTree<cTuple> *mIndex;//prázdné tělo stromu strom
+	cBpTreeHeader<cTuple> *mHeader;//prázdná hlavička*/
 
+	cTable *table = new cTable();
+	
+	int nOc = table->translator->GetNumberofColumns();
 
-	cSpaceDescriptor * SD = new cSpaceDescriptor(2, new cTuple(), new cInt(), false);
+	cSpaceDescriptor * SD = new cSpaceDescriptor(nOc, new cTuple(), new cInt(), false);
 	cTuple* haldaTuple1 = new cTuple(SD);
 	cTuple* haldaTuple2 = new cTuple(SD);
+	cTuple* haldaTuple3 = new cTuple(SD);
+	cTuple* haldaTuple4 = new cTuple(SD);
+	cTuple* haldaTuple5 = new cTuple(SD);
 
-	translator->SetType(query);
+	table->translator->SetType(query);
 
-	if (translator->GetType() == TypeOfTranslator::CREATE)
+	if (table->translator->GetType() == TypeOfTranslator::CREATE)
 	{
-		translator->TranlateCreate(query, translator->GetPosition());//překladad cretae table
-		/*
-			std::vector<cColumn*>originalColumns = translator->GetColumns();
-			columnsHeap = translator->GetColumns();
-			std:make_heap(columnsHeap.begin(), columnsHeap.end());*/
+		table->translator->TranlateCreate(query, table->translator->GetPosition());//překladad cretae table
 
-	std:make_heap(v.begin(), v.end());//vytvoření haldy na vektor
+	std:make_heap(table->v.begin(), table->v.end());//vytvoření haldy
 
 
-		//vytváření b-stromu
-		cBpTreeHeader<cTuple> *mHeader = new cBpTreeHeader<cTuple>(translator->GetTableName(), BLOCK_SIZE, SD, SD->GetTypeSize(), SD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
-		mHeader->SetRuntimeMode(RUNTIME_MODE);
-		mHeader->SetCodeType(CODETYPE);
-		mHeader->SetHistogramEnabled(HISTOGRAMS);
-		mHeader->SetInMemCacheSize(INMEMCACHE_SIZE);
+//vytváření b-stromu
+		table->mHeader = new cBpTreeHeader<cTuple>(table->translator->GetTableName(), BLOCK_SIZE, SD, SD->GetTypeSize(), SD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
+		table->mHeader->SetRuntimeMode(RUNTIME_MODE);
+		table->mHeader->SetCodeType(CODETYPE);
+		table->mHeader->SetHistogramEnabled(HISTOGRAMS);
+		table->mHeader->SetInMemCacheSize(INMEMCACHE_SIZE);
 
 
-		mIndex = new cBpTree<cTuple>();
-		if (!mIndex->Create(mHeader, quickDB))
+
+		table->mIndex = new cBpTree<cTuple>();
+		if (!table->mIndex->Create(table->mHeader, quickDB))
 		{
 			printf("TestCreate: creation failed!\n");
 		}
@@ -352,18 +360,90 @@ int main()
 
 
 
+
+
 	haldaTuple1->SetValue(0, 1, SD);
 	haldaTuple1->SetValue(1, 25, SD);
+	haldaTuple1->SetValue(2, 100, SD);
+
 
 	haldaTuple2->SetValue(0, 2, SD);
 	haldaTuple2->SetValue(1, 30, SD);
+	haldaTuple2->SetValue(2, 200, SD);
 
 
-	v.push_back(haldaTuple1);
-	mIndex->Insert(*haldaTuple1, haldaTuple1->GetData());
+	haldaTuple3->SetValue(0, 3, SD);
+	haldaTuple3->SetValue(1, 18, SD);
+	haldaTuple3->SetValue(2, 300, SD);
 
-	v.push_back(haldaTuple2);
-	mIndex->Insert(*haldaTuple2, haldaTuple2->GetData());
+	haldaTuple4->SetValue(0, 4, SD);
+	haldaTuple4->SetValue(1, 27, SD);
+	haldaTuple4->SetValue(2, 400, SD);
+
+	haldaTuple5->SetValue(0, 5, SD);
+	haldaTuple5->SetValue(1, 41, SD);
+	haldaTuple5->SetValue(2, 500, SD);
+
+
+	table->v.push_back(haldaTuple1);
+	table->mIndex->Insert(*haldaTuple1, haldaTuple1->GetData());
+
+	char *dataPOkus = haldaTuple1->GetData();
+	
+	table->v.push_back(haldaTuple2);
+	table->mIndex->Insert(*haldaTuple2, haldaTuple2->GetData());
+
+	table->v.push_back(haldaTuple3);
+	table->mIndex->Insert(*haldaTuple3, haldaTuple3->GetData());
+
+	table->v.push_back(haldaTuple4);
+	table->mIndex->Insert(*haldaTuple4, haldaTuple4->GetData());
+
+	table->v.push_back(haldaTuple5);
+	table->mIndex->Insert(*haldaTuple5, haldaTuple5->GetData());
+
+	
+
+	//unsigned int height = mHeader->GetHeight();
+
+	cQueryProcStat queryStat;
+	char* resultData = new char[12];
+	nofDeletedItems = 0;
+	cTuple *tuple;
+
+	for (unsigned int i = 0; i <= table->v.size() / 2; i++)
+	{
+
+		printf("Queries: %d\r", i);
+		fflush(stdout);
+
+
+		tuple = table->v[i];
+		if (!table->mIndex->PointQuery(*tuple, resultData, &queryStat))//do result data se nakopíruje leaf
+		{
+			printf("Critical Error: Item was not found!");
+			tuple->Print("\n", SD);
+		}
+		else
+		{
+			char * myData = tuple->GetData();	//data aktuální tuple		
+			// check data
+			for (unsigned int j = 0; j < 12; j++)
+			{
+				if (myData[j] != resultData[j])//porovnáváví jednotlivých bitů
+				{
+					printf("Critical Error: Data are not correct: item order: %u,%u!", i, j);
+					tuple->Print("\n", SD);
+				}
+			}
+		}
+	}
+
+	table->mIndex->Open(table->mHeader, quickDB);
+
+	table->mIndex->PrintInfo();
+	
+	table->mIndex->PrintNode(1);
 
 
 
