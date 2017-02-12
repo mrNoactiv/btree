@@ -174,11 +174,11 @@ int main()
 
 	/*/.////----------------------------------------*/
 	//CREate table
-	/*cDataType *types[] = { new cChar(), new cInt() };
+	cDataType *types[] = { new cChar(), new cInt() };
 
 	cSpaceDescriptor * SDHet1 = new cSpaceDescriptor(2, new tKey_FixedLen(), types, false);
 	tKey_FixedLen* cTup = new cTuple(SDHet1);
-
+	/*
 
 	cTup->SetValue(0, '1', SDHet1);
 	cTup->SetValue(1, 20, SDHet1);
@@ -280,13 +280,7 @@ int main()
 	}
 	cout << endl;
 
-	//create table b-strom
-	cQuickDB *quickDB = new cQuickDB();
-	if (!quickDB->Create(dbPath, CACHE_SIZE, MAX_NODE_INMEM_SIZE, BLOCK_SIZE))
-	{
-		printf("Critical Error: Cache Data File was not created!\n");
-		exit(1);
-	}
+
 
 
 
@@ -317,45 +311,35 @@ int main()
 	cBpTreeHeader<cTuple> *mHeader;//prázdná hlavička*/
 
 	cTable *table = new cTable();
-	
-	int nOc = table->translator->GetNumberofColumns();
-
-	cSpaceDescriptor * SD = new cSpaceDescriptor(nOc, new cTuple(), new cInt(), false);
-	cTuple* haldaTuple1 = new cTuple(SD);
-	cTuple* haldaTuple2 = new cTuple(SD);
-	cTuple* haldaTuple3 = new cTuple(SD);
-	cTuple* haldaTuple4 = new cTuple(SD);
-	cTuple* haldaTuple5 = new cTuple(SD);
-
 	table->translator->SetType(query);
+	cSpaceDescriptor * SD;
+
+	//create table b-strom
+	cQuickDB *quickDB = new cQuickDB();
+	if (!quickDB->Create(dbPath, CACHE_SIZE, MAX_NODE_INMEM_SIZE, BLOCK_SIZE))
+	{
+		printf("Critical Error: Cache Data File was not created!\n");
+		exit(1);
+	}
 
 	if (table->translator->GetType() == TypeOfTranslator::CREATE)
 	{
-		table->translator->TranlateCreate(query, table->translator->GetPosition());//překladad cretae table
-
-	std:make_heap(table->v.begin(), table->v.end());//vytvoření haldy
-
-
-//vytváření b-stromu
-		table->mHeader = new cBpTreeHeader<cTuple>(table->translator->GetTableName(), BLOCK_SIZE, SD, SD->GetTypeSize(), SD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
-		table->mHeader->SetRuntimeMode(RUNTIME_MODE);
-		table->mHeader->SetCodeType(CODETYPE);
-		table->mHeader->SetHistogramEnabled(HISTOGRAMS);
-		table->mHeader->SetInMemCacheSize(INMEMCACHE_SIZE);
-
-
-
-		table->mIndex = new cBpTree<cTuple>();
-		if (!table->mIndex->Create(table->mHeader, quickDB))
-		{
-			printf("TestCreate: creation failed!\n");
-		}
+		table->CreateTable(query, quickDB);
 	}
 	else
 	{
 		cout << "command not found" << endl;
 	}
 
+	cTuple* haldaTuple1 = new cTuple(table->translator->GetSpaceDescriptor());
+	cTuple* haldaTuple2 = new cTuple(table->translator->GetSpaceDescriptor());
+	cTuple* haldaTuple3 = new cTuple(table->translator->GetSpaceDescriptor());
+	cTuple* haldaTuple4 = new cTuple(table->translator->GetSpaceDescriptor());
+	cTuple* haldaTuple5 = new cTuple(table->translator->GetSpaceDescriptor());
+	
+	
+	
+	
 	//vložení do haldy
 
 
@@ -404,8 +388,7 @@ int main()
 
 	
 
-	//unsigned int height = mHeader->GetHeight();
-
+	//test dat
 	cQueryProcStat queryStat;
 	char* resultData = new char[12];
 	nofDeletedItems = 0;

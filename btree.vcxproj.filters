@@ -599,5 +599,6 @@
     <ClCompile Include="test_multirangequery.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="cColumn.cpp" />
   </ItemGroup>
 </Project>

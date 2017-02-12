@@ -8,9 +8,10 @@
 #include <algorithm>
 #include <array>
 #include <vector>
+
 class cColumn
 {
-public:
+private:
 	std::string name;
 	int size;
 	cDataType *cType;
@@ -18,5 +19,17 @@ public:
 	bool notNull;
 	bool primaryKey;
 	cSpaceDescriptor *columnSD;
+
+	cBasicType<cDataType*> GetColumnType();
+
 };
+
+
+
+inline cBasicType<cDataType*> cColumn::GetColumnType()
+{
+	return cType;
+}
+
+
 

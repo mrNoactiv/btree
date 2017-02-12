@@ -8,16 +8,18 @@
 enum TypeOfTranslator { CREATE = 0, ALTER = 1 };
 class cTranslator
 {
-private:
+public:
 
 	unsigned int position;
 	unsigned int iteration;
 	const char * cTableName;
 	std::vector<cColumn*>*columns;
 	TypeOfTranslator type;
-	unsigned int numberOfColumns;
+	
+
 	cSpaceDescriptor * SD;
 	bool homogenous=true;
+
 
 public:
 	cTranslator();
@@ -27,13 +29,13 @@ public:
 	TypeOfTranslator GetType();
 	vector<cColumn*>GetColumns();
 	const char * GetTableName();
-	unsigned int GetNumberofColumns();
-	void CreateFixSpaceDescriptor();
+	cSpaceDescriptor* CreateFixSpaceDescriptor();
+	cSpaceDescriptor* GetSpaceDescriptor();
 
 
 };
 
-cTranslator::cTranslator() :position(0), iteration(0), cTableName(NULL), columns(NULL), numberOfColumns(0),SD(NULL)
+cTranslator::cTranslator() :position(0), iteration(0), cTableName(NULL), columns(NULL),SD(NULL)
 {
 
 }
@@ -63,19 +65,19 @@ inline void cTranslator::TranlateCreate(string input, int position)
 
 	columns = new vector<cColumn*>();
 	cDataType *CheckType;
+	//dataTypes = new vector<cDataType>();
 	do
 	{
 		if (iteration > 0)
 		{
 			position++;
-			
 		}
 
-		cColumn* column= new cColumn();
+		cColumn* column = new cColumn();
 		string TEMPType;
 		string TMPSize;
-		
-		
+
+
 		while (input.find(" ", position) != position)//vyhledání mezery po názvu sloupce
 		{
 			column->name.insert(0, 1, input.at(position));
@@ -100,19 +102,18 @@ inline void cTranslator::TranlateCreate(string input, int position)
 		}
 
 		std::reverse(TEMPType.begin(), TEMPType.end());//preklopení datového typu sloupce
-		
+
 		column->cType = cBasicType<cDataType*>::GetType(TEMPType);
-		
-		if (iteration > 0 && homogenous==true)
+
+		if (iteration > 0 && homogenous == true)//ověření jestli je tabulka homogení
 		{
 			if (column->cType->GetCode() != CheckType->GetCode())
 				homogenous = false;
 			else
-				homogenous = true;		
+				homogenous = true;
 		}
-		
-		CheckType=column->cType;
 
+		CheckType=column->cType;
 
 
 		//position++;
@@ -175,14 +176,14 @@ inline void cTranslator::TranlateCreate(string input, int position)
 		columns->push_back(column);
 		
 		iteration++;
-		numberOfColumns++;
+
 
 		
 		
 
 	} while (input.find(")", position) != position);
 
-
+	
 
 
 
@@ -208,17 +209,32 @@ inline const char* cTranslator::GetTableName()
 	return cTableName;
 }
 
-inline unsigned int cTranslator::GetNumberofColumns()
+
+
+inline cSpaceDescriptor* cTranslator::CreateFixSpaceDescriptor()
 {
-	return numberOfColumns;
+	if (!homogenous)
+	{
+		cDataType ** ptr;
+		ptr = new cDataType*[columns->size()];
+
+		for (int i = 0; i < columns->size(); i++)
+		{
+			ptr[i] = columns->at(i)->cType;
+		}
+		SD = new cSpaceDescriptor(columns->size(), new cTuple(), ptr, false);//SD tuplu
+	}
+	else
+	{
+		SD = new cSpaceDescriptor(columns->size(), new cTuple(), columns->at(0)->cType, false);//SD tuplu
+	}
+	return SD;
+	
 }
 
-inline void cTranslator::CreateFixSpaceDescriptor()
+inline cSpaceDescriptor* cTranslator::GetSpaceDescriptor()
 {
-
-	
-	SD = new cSpaceDescriptor(numberOfColumns, new cTuple(), new cInt(), false);
-
+	return SD;
 }
 
 
