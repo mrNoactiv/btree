@@ -26,7 +26,7 @@ public:
 public:
 
 		cTable();
-		bool CreateTable(string query, cQuickDB *quickDB);
+		bool CreateTable(string query, cQuickDB *quickDB, const unsigned int BLOCK_SIZE, uint DSMODE, unsigned int COMPRESSION_RATIO, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, static const uint INMEMCACHE_SIZE);
 		cBpTreeHeader<cTuple>*GetHeader();
 		cBpTree<cTuple>*GetIndex();
 
@@ -37,11 +37,11 @@ cTable::cTable():v(NULL),translator(new cTranslator()),mIndex(NULL),mHeader(NULL
 	
 }
 
-inline bool cTable::CreateTable(string query, cQuickDB *quickDB)
+inline bool cTable::CreateTable(string query, cQuickDB *quickDB,const unsigned int BLOCK_SIZE,uint DSMODE,unsigned int COMPRESSION_RATIO, unsigned int CODETYPE,unsigned int RUNTIME_MODE,bool HISTOGRAMS, static const uint INMEMCACHE_SIZE)
 {
 	
 	translator->TranlateCreate(query, translator->GetPosition());//překladad cretae table
-	translator->CreateFixSpaceDescriptor();//vytvoření SD podle nové tabulky
+	//translator->CreateFixSpaceDescriptor();//vytvoření SD podle nové tabulky
 
 	cSpaceDescriptor *SD=translator->CreateFixSpaceDescriptor();
 

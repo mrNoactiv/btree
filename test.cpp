@@ -281,12 +281,6 @@ int main()
 	cout << endl;
 
 
-
-
-
-
-
-
 	string insertData = "insert";
 	string deleteData = "delete";
 	string createDDL = "create table";
@@ -324,7 +318,8 @@ int main()
 
 	if (table->translator->GetType() == TypeOfTranslator::CREATE)
 	{
-		table->CreateTable(query, quickDB);
+		table->CreateTable(query, quickDB, BLOCK_SIZE, DSMODE, COMPRESSION_RATIO, RUNTIME_MODE, CODETYPE, HISTOGRAMS, INMEMCACHE_SIZE);
+		SD = table->translator->GetSpaceDescriptor();
 	}
 	else
 	{
@@ -336,11 +331,11 @@ int main()
 	cTuple* haldaTuple3 = new cTuple(table->translator->GetSpaceDescriptor());
 	cTuple* haldaTuple4 = new cTuple(table->translator->GetSpaceDescriptor());
 	cTuple* haldaTuple5 = new cTuple(table->translator->GetSpaceDescriptor());
-	
-	
-	
-	
-	//vložení do haldy
+	cTuple* haldaTuple6 = new cTuple(table->translator->GetSpaceDescriptor());
+	cTuple* haldaTuple7 = new cTuple(table->translator->GetSpaceDescriptor());
+	cTuple* haldaTuple8 = new cTuple(table->translator->GetSpaceDescriptor());
+	cTuple* haldaTuple9 = new cTuple(table->translator->GetSpaceDescriptor());
+	cTuple* haldaTuple10 = new cTuple(table->translator->GetSpaceDescriptor());
 
 
 
@@ -349,7 +344,7 @@ int main()
 	haldaTuple1->SetValue(0, 1, SD);
 	haldaTuple1->SetValue(1, 25, SD);
 	haldaTuple1->SetValue(2, 100, SD);
-
+	haldaTuple1->SetValue(3, 1, SD);
 
 	haldaTuple2->SetValue(0, 2, SD);
 	haldaTuple2->SetValue(1, 30, SD);
@@ -368,25 +363,78 @@ int main()
 	haldaTuple5->SetValue(1, 41, SD);
 	haldaTuple5->SetValue(2, 500, SD);
 
+	haldaTuple6->SetValue(0, 6, SD);
+	haldaTuple6->SetValue(1, 66, SD);
+	haldaTuple6->SetValue(2, 666, SD);
 
-	table->v.push_back(haldaTuple1);
-	table->mIndex->Insert(*haldaTuple1, haldaTuple1->GetData());
+	haldaTuple7->SetValue(0, 7, SD);
+	haldaTuple7->SetValue(1, 77, SD);
+	haldaTuple7->SetValue(2, 777, SD);
 
-	char *dataPOkus = haldaTuple1->GetData();
+	haldaTuple7->SetValue(0, 8, SD);
+	haldaTuple7->SetValue(1, 88, SD);
+	haldaTuple7->SetValue(2, 888, SD);
+
+	haldaTuple8->SetValue(0, 9, SD);
+	haldaTuple8->SetValue(1, 99, SD);
+	haldaTuple8->SetValue(2, 999, SD);
+
+	haldaTuple9->SetValue(0, 10, SD);
+	haldaTuple9->SetValue(1, 100, SD);
+	haldaTuple9->SetValue(2, 111, SD);
+
+	haldaTuple10->SetValue(0, 5, SD);
+	haldaTuple10->SetValue(1, 41, SD);
+	haldaTuple10->SetValue(2, 500, SD);
+
+	//32bitový int (přidáte mezi atributy, ne do klíče) do kterého dáte číslo uzlu a pořadí v uzlu
+	//1.přidat int32 do dat
+
+
 	
+	table->mIndex->Insert(*haldaTuple1, haldaTuple1->GetData());
+	
+	unsigned cisloUzlu=table->mHeader->GetNodeCount();
+	unsigned cislo=table->mHeader->GetItemCount();
+
+
+	//char *dataPOkus = haldaTuple1->GetData();
+
 	table->v.push_back(haldaTuple2);
 	table->mIndex->Insert(*haldaTuple2, haldaTuple2->GetData());
+	
+	cisloUzlu = table->mHeader->GetNodeCount();
+	cislo = table->mHeader->GetItemCount();
+
 
 	table->v.push_back(haldaTuple3);
 	table->mIndex->Insert(*haldaTuple3, haldaTuple3->GetData());
+	 cislo = table->mHeader->GetItemCount();
 
 	table->v.push_back(haldaTuple4);
 	table->mIndex->Insert(*haldaTuple4, haldaTuple4->GetData());
+	 cislo = table->mHeader->GetItemCount();
 
 	table->v.push_back(haldaTuple5);
 	table->mIndex->Insert(*haldaTuple5, haldaTuple5->GetData());
+	 cislo = table->mHeader->GetItemCount();
 
-	
+	table->v.push_back(haldaTuple6);
+	table->mIndex->Insert(*haldaTuple6, haldaTuple6->GetData());
+	 cislo = table->mHeader->GetItemCount();
+
+	table->v.push_back(haldaTuple7);
+	table->mIndex->Insert(*haldaTuple7, haldaTuple7->GetData());
+
+	table->v.push_back(haldaTuple8);
+	table->mIndex->Insert(*haldaTuple8, haldaTuple8->GetData());
+
+	table->v.push_back(haldaTuple9);
+	table->mIndex->Insert(*haldaTuple9, haldaTuple9->GetData());
+
+	table->v.push_back(haldaTuple10);
+	table->mIndex->Insert(*haldaTuple10, haldaTuple10->GetData());
+
 
 	//test dat
 	cQueryProcStat queryStat;
@@ -422,13 +470,16 @@ int main()
 		}
 	}
 
+	cTuple item;
+
 	table->mIndex->Open(table->mHeader, quickDB);
 
 	table->mIndex->PrintInfo();
-	
+
 	table->mIndex->PrintNode(1);
 
-
+	cBpTreeNode<cTuple> *node = table->mIndex->ReadInnerNodeR(1);
+	cBpTreeNode<cTuple> *leafode=table->mIndex->ReadLeafNodeR(1);
 
 	//create table ahoj(column1 CHAR(255),column2 FLOAT(255))....)
 	//create table ahoj(column1 INT NOT NULL,column2 FLOAT(255))
@@ -442,7 +493,7 @@ int main()
 		
 
 	
-	 if (std::size_t foundDDL = query.find(dropDDL, 0) == 0)
+	if (std::size_t foundDDL = query.find(dropDDL, 0) == 0)
 	{
 		cout << "drop was used" << endl;
 	}

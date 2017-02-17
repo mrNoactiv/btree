@@ -11,7 +11,7 @@
 
 class cColumn
 {
-private:
+public:
 	std::string name;
 	int size;
 	cDataType *cType;
@@ -21,7 +21,6 @@ private:
 	cSpaceDescriptor *columnSD;
 
 	cBasicType<cDataType*> GetColumnType();
-
 };
 
 

@@ -215,18 +215,36 @@ inline cSpaceDescriptor* cTranslator::CreateFixSpaceDescriptor()
 {
 	if (!homogenous)
 	{
+		cDataType *typ = new cInt();
 		cDataType ** ptr;
-		ptr = new cDataType*[columns->size()];
+		ptr = new cDataType*[columns->size() + 1];
+		int i;
 
-		for (int i = 0; i < columns->size(); i++)
+		for (i = 0; i < columns->size(); i++)
 		{
 			ptr[i] = columns->at(i)->cType;
 		}
-		SD = new cSpaceDescriptor(columns->size(), new cTuple(), ptr, false);//SD tuplu
+
+		ptr[i] = new cInt();// cBasicType<cDataType*>::GetType("INT");
+		SD = new cSpaceDescriptor(columns->size() + 1, new cTuple(), ptr, false);//SD tuplu
 	}
 	else
 	{
-		SD = new cSpaceDescriptor(columns->size(), new cTuple(), columns->at(0)->cType, false);//SD tuplu
+		cDataType *typ = new cInt();
+		cDataType ** ptr;
+		ptr = new cDataType*[columns->size()+1];
+		int i;
+
+		for ( i = 0; i < columns->size(); i++)
+		{
+			ptr[i] = columns->at(i)->cType;
+		}
+		
+		ptr[i] = new cInt();// cBasicType<cDataType*>::GetType("INT");
+		SD = new cSpaceDescriptor(columns->size()+1, new cTuple(), ptr, false);//SD tuplu
+		
+		
+		//SD = new cSpaceDescriptor(columns->size(), new cTuple(), columns->at(0)->cType, false);//SD tuplu
 	}
 	return SD;
 	
