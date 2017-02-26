@@ -39,7 +39,7 @@ d:\skola\bakalarka\pokusy\btree_test\debug\cblocklinkedlist.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\carray2.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\carray.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\ctuple.obj
-d:\skola\bakalarka\pokusy\btree_test\debug\test_multirangequery.obj
+d:\skola\bakalarka\pokusy\btree_test\debug\ccolumn.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\crangequerycontext.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\crangequeryconfig.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\cqueryprocstat.obj
@@ -58,7 +58,8 @@ d:\skola\bakalarka\pokusy\btree_test\debug\cbucketheader.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\ctimer.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\chistogram.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\ccounter.obj
-d:\skola\bakalarka\pokusy\btree_test\debug\ctableatribut.obj
+d:\skola\bakalarka\pokusy\btree_test\debug\test_multirangequery.obj
+d:\skola\bakalarka\pokusy\btree_test\debug\test.obj
 d:\skola\bakalarka\pokusy\btree_test\debug\btree.ilk
 d:\skola\bakalarka\pokusy\btree_test\debug\btree.exe
 d:\skola\bakalarka\pokusy\btree_test\debug\btree.pdb

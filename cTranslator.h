@@ -5,7 +5,7 @@
 #include "cColumn.h"
 
 
-enum TypeOfTranslator { CREATE = 0, ALTER = 1 };
+enum TypeOfTranslator { CREATE = 0, SELECT = 1 };
 class cTranslator
 {
 public:
@@ -15,10 +15,12 @@ public:
 	const char * cTableName;
 	std::vector<cColumn*>*columns;
 	TypeOfTranslator type;
-	
+
 
 	cSpaceDescriptor * SD;
-	bool homogenous=true;
+	cSpaceDescriptor * keySD;
+	cDataType *keyType;
+	bool homogenous = true;
 
 
 public:
@@ -30,6 +32,7 @@ public:
 	vector<cColumn*>GetColumns();
 	const char * GetTableName();
 	cSpaceDescriptor* CreateFixSpaceDescriptor();
+	cSpaceDescriptor* CreateKeySpaceDescriptor();
 	cSpaceDescriptor* GetSpaceDescriptor();
 
 
@@ -182,11 +185,8 @@ inline void cTranslator::TranlateCreate(string input, int position)
 		
 
 	} while (input.find(")", position) != position);
-
 	
-
-
-
+	CreateFixSpaceDescriptor();
 }
 
 inline int cTranslator::GetPosition()
@@ -217,7 +217,7 @@ inline cSpaceDescriptor* cTranslator::CreateFixSpaceDescriptor()
 	{
 		cDataType *typ = new cInt();
 		cDataType ** ptr;
-		ptr = new cDataType*[columns->size() + 1];
+		ptr = new cDataType*[columns->size() ];
 		int i;
 
 		for (i = 0; i < columns->size(); i++)
@@ -225,12 +225,12 @@ inline cSpaceDescriptor* cTranslator::CreateFixSpaceDescriptor()
 			ptr[i] = columns->at(i)->cType;
 		}
 
-		ptr[i] = new cInt();// cBasicType<cDataType*>::GetType("INT");
-		SD = new cSpaceDescriptor(columns->size() + 1, new cTuple(), ptr, false);//SD tuplu
+		//ptr[i] = new cInt();// cBasicType<cDataType*>::GetType("INT");
+		SD = new cSpaceDescriptor(columns->size() , new cTuple(), ptr, false);//SD tuplu
 	}
 	else
 	{
-		cDataType *typ = new cInt();
+		/*cDataType *typ = new cInt();
 		cDataType ** ptr;
 		ptr = new cDataType*[columns->size()+1];
 		int i;
@@ -242,12 +242,47 @@ inline cSpaceDescriptor* cTranslator::CreateFixSpaceDescriptor()
 		
 		ptr[i] = new cInt();// cBasicType<cDataType*>::GetType("INT");
 		SD = new cSpaceDescriptor(columns->size()+1, new cTuple(), ptr, false);//SD tuplu
+		*/
 		
-		
-		//SD = new cSpaceDescriptor(columns->size(), new cTuple(), columns->at(0)->cType, false);//SD tuplu
+		SD = new cSpaceDescriptor(columns->size(), new cTuple(), columns->at(0)->cType, false);//SD tuplu
 	}
 	return SD;
 	
+}
+
+inline cSpaceDescriptor * cTranslator::CreateKeySpaceDescriptor()
+{
+	/*
+	for (int i = 0; i < columns->size(); i++)
+	{
+		if (columns->at(i)->primaryKey)
+		{
+			keyType = columns->at(i)->cType;
+		}
+	}
+	keySD= new cSpaceDescriptor(1, new cTuple(), keyType, false);
+	*/
+	//nebo
+
+	cDataType *typ = new cInt();
+	cDataType ** ptr;
+	ptr = new cDataType*[2];
+
+
+	for (int i = 0; i < columns->size(); i++)
+	{
+		if (columns->at(i)->primaryKey)
+		{
+			keyType = columns->at(i)->cType;
+			ptr[0] = keyType;
+		}
+	}
+	
+	ptr[1] = new cInt();
+	keySD = new cSpaceDescriptor(2, new cTuple(), ptr, false);
+
+	
+	return keySD;
 }
 
 inline cSpaceDescriptor* cTranslator::GetSpaceDescriptor()
