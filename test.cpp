@@ -7,9 +7,10 @@
 #include <algorithm>
 #include <array>
 #include <vector>
-#include "cTranslator.h"
+#include "cTranslatorCreate.h"
 #include "cColumn.h"
 #include "cTable.h"
+#include "cTypeOfTranslator.h"
 
 using namespace common::random;
 using namespace common::data;
@@ -137,7 +138,7 @@ int main()
 
 
 	float floatNumber = floatTuple->GetFloat(0,floatSD);*/
-	
+
 	//cBasicType<cDataType*> t = new cChar();
 
 
@@ -315,14 +316,6 @@ int main()
 
 	//std::vector<std::string>paramWithSize = { "CHAR","FLOAT" };
 
-	//query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)";
-	query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,AGE INT,KIDS INT)";
-
-
-	cTable *table = new cTable();
-	table->translator->SetType(query);
-	cSpaceDescriptor * SD;
-
 	//create table b-strom
 	cQuickDB *quickDB = new cQuickDB();
 	if (!quickDB->Create(dbPath, CACHE_SIZE, MAX_NODE_INMEM_SIZE, BLOCK_SIZE))
@@ -331,27 +324,46 @@ int main()
 		exit(1);
 	}
 
-	if (table->translator->GetType() == TypeOfTranslator::CREATE)
+
+
+	//query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)";
+	query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,AGE INT,KIDS INT)";
+	
+
+	cTypeOfTranslator *typeofTranslator = new cTypeOfTranslator();
+	typeofTranslator->SetType(query);
+
+	cTable *table = new cTable();
+	//table->translator->SetType(query);
+	cSpaceDescriptor * SD;
+
+
+
+	if (typeofTranslator->type == Type::CREATE)
 	{
 		table->CreateTable(query, quickDB, BLOCK_SIZE, DSMODE, COMPRESSION_RATIO, RUNTIME_MODE, CODETYPE, HISTOGRAMS, INMEMCACHE_SIZE);
-		SD = table->translator->GetSpaceDescriptor();
+		SD = table->SD;
 
+	}
+	else if (typeofTranslator->type == Type::INDEX)
+	{
+		table->CreateIndex(query, quickDB, BLOCK_SIZE, DSMODE, COMPRESSION_RATIO, RUNTIME_MODE, CODETYPE, HISTOGRAMS, INMEMCACHE_SIZE);
 	}
 	else
 	{
 		cout << "command not found" << endl;
 	}
 
-	cTuple* haldaTuple1 = new cTuple(table->translator->GetSpaceDescriptor());
-	cTuple* haldaTuple2 = new cTuple(table->translator->GetSpaceDescriptor());
-	cTuple* haldaTuple3 = new cTuple(table->translator->GetSpaceDescriptor());
-	cTuple* haldaTuple4 = new cTuple(table->translator->GetSpaceDescriptor());
-	cTuple* haldaTuple5 = new cTuple(table->translator->GetSpaceDescriptor());
-	cTuple* haldaTuple6 = new cTuple(table->translator->GetSpaceDescriptor());
-	cTuple* haldaTuple7 = new cTuple(table->translator->GetSpaceDescriptor());
-	cTuple* haldaTuple8 = new cTuple(table->translator->GetSpaceDescriptor());
-	cTuple* haldaTuple9 = new cTuple(table->translator->GetSpaceDescriptor());
-	cTuple* haldaTuple10 = new cTuple(table->translator->GetSpaceDescriptor());
+	cTuple* haldaTuple1 = new cTuple(SD);
+	cTuple* haldaTuple2 = new cTuple(SD);
+	cTuple* haldaTuple3 = new cTuple(SD);
+	cTuple* haldaTuple4 = new cTuple(SD);
+	cTuple* haldaTuple5 = new cTuple(SD);
+	cTuple* haldaTuple6 = new cTuple(SD);
+	cTuple* haldaTuple7 = new cTuple(SD);
+	cTuple* haldaTuple8 = new cTuple(SD);
+	cTuple* haldaTuple9 = new cTuple(SD);
+	cTuple* haldaTuple10 = new cTuple(SD);
 
 
 
@@ -405,7 +417,7 @@ int main()
 
 
 
-/*  generator pro int
+/*  generator pro int*/
 	int j = 100;
 	int k = 500;
 	for (int i = 0; i < 1000; i++)
@@ -421,11 +433,6 @@ int main()
 		table->SetValues(haldaTuple, SD);
 
 	}
-	*/
-
-
-
-
 	/*generator pro float klic*/
 	/*
 	int j = 100;
@@ -434,16 +441,41 @@ int main()
 	{
 
 
-		cTuple* haldaTuple = new cTuple(SD);
+	cTuple* haldaTuple = new cTuple(SD);
 
-		haldaTuple->SetValue(0, i*0.12, SD);
-		haldaTuple->SetValue(1, j + i, SD);
-		haldaTuple->SetValue(2, k + i, SD);
+	haldaTuple->SetValue(0, i*0.12, SD);
+	haldaTuple->SetValue(1, j + i, SD);
+	haldaTuple->SetValue(2, k + i, SD);
 
-		table->SetValues(haldaTuple, SD);
+	table->SetValues(haldaTuple, SD);
 
 	}
 	*/
+
+
+	query = "create index index_name ON ahoj(AGE)";
+
+	typeofTranslator->SetType(query);
+
+	if (typeofTranslator->type == Type::CREATE)
+	{
+		table->CreateTable(query, quickDB, BLOCK_SIZE, DSMODE, COMPRESSION_RATIO, RUNTIME_MODE, CODETYPE, HISTOGRAMS, INMEMCACHE_SIZE);
+		SD = table->SD;
+
+	}
+	else if (typeofTranslator->type == Type::INDEX)
+	{
+		table->CreateIndex(query, quickDB, BLOCK_SIZE, DSMODE, COMPRESSION_RATIO, RUNTIME_MODE, CODETYPE, HISTOGRAMS, INMEMCACHE_SIZE);
+	}
+	else
+	{
+		cout << "command not found" << endl;
+	}
+
+
+
+
+	
 
 	/*
 	//test dat
@@ -482,35 +514,35 @@ int main()
 	*/
 	cTuple item;
 
-	table->mIndex->Open(table->mHeader, quickDB);
+	table->mKeyIndex->Open(table->mKeyHeader, quickDB);
 
-	table->mIndex->PrintInfo();
+	table->mKeyIndex->PrintInfo();
 
-	table->mIndex->PrintNode(4);
+	table->mKeyIndex->PrintNode(4);
 
-	cBpTreeNode<cTuple> *node1 = table->mIndex->ReadInnerNodeR(1);//255 itemu
+	cBpTreeNode<cTuple> *node1 = table->mKeyIndex->ReadInnerNodeR(1);//255 itemu
 	unsigned int pocet = node1->GetItemCount();
 	char *nodeData1 = (char*)node1->GetCItem(0);
-	int dataNode1 = cCommonNTuple<int>::GetInt(nodeData1, 1, table->translator->keySD);
+	int dataNode1 = cCommonNTuple<int>::GetInt(nodeData1, 1, table->keySD);
 
 
 
 
 
-	cBpTreeNode<cTuple> *node2 = table->mIndex->ReadLeafNodeR(2);//255 itemu
+	cBpTreeNode<cTuple> *node2 = table->mKeyIndex->ReadLeafNodeR(2);//255 itemu
 	char *nodeData2 = (char*)node2->GetCItem(1);
-	int dataNode2 = cCommonNTuple<int>::GetInt(nodeData2, 0, table->translator->keySD);
+	int dataNode2 = cCommonNTuple<int>::GetInt(nodeData2, 0, table->keySD);
 
-	cBpTreeNode<cTuple> *node3 = table->mIndex->ReadLeafNodeR(3);//3 itemy
+	cBpTreeNode<cTuple> *node3 = table->mKeyIndex->ReadLeafNodeR(3);//3 itemy
 	char *nodeData3 = node3->GetData();
-	int dataNode3 = cCommonNTuple<int>::GetInt(nodeData3, 0, table->translator->keySD);
+	int dataNode3 = cCommonNTuple<int>::GetInt(nodeData3, 0, table->keySD);
 
-	cBpTreeNode<cTuple> *node4 = table->mIndex->ReadLeafNodeR(4);//500
+	cBpTreeNode<cTuple> *node4 = table->mKeyIndex->ReadLeafNodeR(4);//500
 	char *nodeData4 = node4->GetData();
-	int dataNode4 = cCommonNTuple<int>::GetInt(nodeData4, 0, table->translator->keySD);
+	int dataNode4 = cCommonNTuple<int>::GetInt(nodeData4, 0, table->keySD);
 
 
-	cBpTreeNode<cTuple> *leafnode = table->mIndex->ReadLeafNodeR(4);//přístup na listové uzly
+	cBpTreeNode<cTuple> *leafnode = table->mKeyIndex->ReadLeafNodeR(4);//přístup na listové uzly
 	sItemBuffers *buffer = new sItemBuffers();
 
 	const char *leafKey = leafnode->GetCKey(0);
@@ -521,7 +553,7 @@ int main()
 	//create table ahoj(column1 INT NOT NULL,column1 INT NOT NULL,column1 INT NOT NULL)
 
 	float floatKlic = 2.4;
-	cTuple *searchedTuple = table->FindKey(floatKlic);
+	cTuple *searchedTuple = table->FindKey(5);
 
 
 	int id = searchedTuple->GetInt(0, SD);
@@ -529,6 +561,10 @@ int main()
 	int kids = searchedTuple->GetInt(2, SD);
 
 	
+
+
+
+
 
 	if (std::size_t foundDDL = query.find(dropDDL, 0) == 0)
 	{

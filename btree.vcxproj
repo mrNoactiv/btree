@@ -327,7 +327,9 @@
     <ClInclude Include="..\..\..\dstruct\paged\queryprocessing\sBatchRQ.h" />
     <ClInclude Include="cColumn.h" />
     <ClInclude Include="cTable.h" />
-    <ClInclude Include="cTranslator.h" />
+    <ClInclude Include="cTranslatorCreate.h" />
+    <ClInclude Include="cTranslatorIndex.h" />
+    <ClInclude Include="cTypeOfTranslator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\common\cBitArray.cpp" />
@@ -390,6 +392,7 @@
     <ClCompile Include="..\..\..\dstruct\paged\queryprocessing\cRangeQueryConfig.cpp" />
     <ClCompile Include="..\..\..\dstruct\paged\queryprocessing\cRangeQueryContext.cpp" />
     <ClCompile Include="cColumn.cpp" />
+    <ClCompile Include="cTypeOfTranslator.cpp" />
     <ClCompile Include="ngramtest.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

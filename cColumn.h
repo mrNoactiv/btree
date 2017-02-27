@@ -19,6 +19,7 @@ public:
 	bool notNull;
 	bool primaryKey;
 	cSpaceDescriptor *columnSD;
+	int positionInTable;
 
 	cBasicType<cDataType*> GetColumnType();
 };
@@ -29,6 +30,7 @@ inline cBasicType<cDataType*> cColumn::GetColumnType()
 {
 	return cType;
 }
+
 
 
 

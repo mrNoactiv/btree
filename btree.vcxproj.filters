@@ -399,13 +399,19 @@
     <ClInclude Include="..\..\..\dstruct\paged\core\cBulkLoadArray.h">
       <Filter>dstruct\paged\core</Filter>
     </ClInclude>
-    <ClInclude Include="cTranslator.h">
-      <Filter>Test\MyCode</Filter>
-    </ClInclude>
     <ClInclude Include="cColumn.h">
       <Filter>Test\MyCode</Filter>
     </ClInclude>
     <ClInclude Include="cTable.h">
+      <Filter>Test\MyCode</Filter>
+    </ClInclude>
+    <ClInclude Include="cTranslatorCreate.h">
+      <Filter>Test\MyCode</Filter>
+    </ClInclude>
+    <ClInclude Include="cTypeOfTranslator.h">
+      <Filter>Test\MyCode</Filter>
+    </ClInclude>
+    <ClInclude Include="cTranslatorIndex.h">
       <Filter>Test\MyCode</Filter>
     </ClInclude>
   </ItemGroup>
@@ -600,5 +606,6 @@
       <Filter>Test</Filter>
     </ClCompile>
     <ClCompile Include="cColumn.cpp" />
+    <ClCompile Include="cTypeOfTranslator.cpp" />
   </ItemGroup>
 </Project>
