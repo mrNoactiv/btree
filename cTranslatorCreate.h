@@ -5,7 +5,7 @@
 #include "cColumn.h"
 
 
-
+enum TypeOfCreate { BTREE, RTREE };
 class cTranslatorCreate
 {
 public:
@@ -19,7 +19,7 @@ public:
 	cSpaceDescriptor * keySD;
 	cDataType *keyType;
 	bool homogenous = true;
-
+	TypeOfCreate typeOfCreate;
 
 
 
@@ -153,7 +153,7 @@ inline void cTranslatorCreate::TranlateCreate(string input)
 				{
 					ptr[i] = new cChar();
 				}
-				column->columnSD = new cSpaceDescriptor(column->size, new cNTuple(), ptr, false);//SD tuplu				
+				column->columnSD = new cSpaceDescriptor(column->size, new cNTuple(), ptr, false);//SD varchar tuplu				
 			}
 			else
 			{
@@ -197,6 +197,28 @@ inline void cTranslatorCreate::TranlateCreate(string input)
 		
 
 	} while (input.find(")", position) != position);
+	position = position + 2;
+	if (input.find("option:", position ) == position)
+	{
+		position = position + 7;
+
+		if (input.find("BTREE", position) == position)
+		{
+			typeOfCreate = BTREE;
+		}
+		else if (input.find("RTREE", position) == position)
+		{
+			typeOfCreate = RTREE;
+		}
+		else
+		{
+			cout << "unknow structure" << endl;
+			exit(0);
+		}
+	}
+	else
+		typeOfCreate = BTREE;
+
 	
 	CreateFixSpaceDescriptor();
 	CreateKeySpaceDescriptor();

@@ -134,7 +134,7 @@ int main()
 	cSpaceDescriptor * floatSD = new cSpaceDescriptor(1, new cTuple(), new cFloat(), false);
 	cTuple* floatTuple = new cTuple(floatSD);
 
-	floatTuple->SetValue(0, 2, floatSD);
+	floatTuple->SetValue(0, 2.4, floatSD);
 
 
 	float floatNumber = floatTuple->GetFloat(0,floatSD);*/
@@ -217,10 +217,6 @@ int main()
 	//zkusit udělat select
 
 
-	//pozn: data mají 2 část. První část je ten klíč který se indexuje a druhá část jsou neindexovaná DATA která se nepoipisují SD ale jen velikostí(rezdělení ve FW key a data)
-	//tzn. data a klíč nejsou uležené v jednom tuplu dohromady;tuple představuje klíč a potom ty data jsou považovány za binární šrot(?data jsou asi uloežené v paměti hned za tím tuplem co představuje klíč?), v hlavičce je uložené
-	//, že za klíčem jsou data o proměnnée velikosti nebo se přímo v konstruktoru určuje přímo velikost třeba 12== 3x int
-
 	char *stringVal = new char();
 	int intVal;
 
@@ -243,27 +239,6 @@ int main()
 	homoTuple->SetValue(2, 'o', homoSD);
 	homoTuple->SetValue(3, 'h', homoSD);
 	homoTuple->SetValue(4, 'a', homoSD);
-
-
-
-	cSpaceDescriptor * banan = new cSpaceDescriptor(5, new tKey_FixedLen(), new cInt(), false);
-	tKey_FixedLen* opice = new cTuple(banan);
-
-	opice->SetValue(0, 1, banan);
-	opice->SetValue(1, 2, banan);
-	opice->SetValue(2, 3, banan);
-	opice->SetValue(3, 4, banan);
-	opice->SetValue(4, 5, banan);
-
-	int bulshit2 = opice->GetInt(1, banan);
-
-	char * homoData = opice->GetData();
-
-	int bulshit = cCommonNTuple<int>::GetInt(homoData, 0, banan);
-	bulshit = cCommonNTuple<int>::GetInt(homoData, 1, banan);
-	bulshit = cCommonNTuple<int>::GetInt(homoData, 2, banan);
-	bulshit = cCommonNTuple<int>::GetInt(homoData, 3, banan);
-	bulshit = cCommonNTuple<int>::GetInt(homoData, 4, banan);
 
 
 
@@ -307,13 +282,6 @@ int main()
 	cout << endl;
 
 
-	string insertData = "insert";
-	string deleteData = "delete";
-	string createDDL = "create table";
-	string dropDDL = "drop table";
-	string query;
-	string input;
-
 	//std::vector<std::string>paramWithSize = { "CHAR","FLOAT" };
 
 	//create table b-strom
@@ -325,10 +293,10 @@ int main()
 	}
 
 
-
+	string query;
 	//query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)";
-	query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,AGE INT,KIDS INT)";
-	
+	query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,AGE INT,KIDS INT) option:BTREE";
+
 
 	cTypeOfTranslator *typeofTranslator = new cTypeOfTranslator();
 	typeofTranslator->SetType(query);
@@ -368,59 +336,18 @@ int main()
 
 
 
-	//nastavení hodnot
-	haldaTuple1->SetValue(0, 1, SD);
-	haldaTuple1->SetValue(1, 25, SD);
-	haldaTuple1->SetValue(2, 100, SD);
-
-
-	haldaTuple2->SetValue(0, 2, SD);
-	haldaTuple2->SetValue(1, 30, SD);
-	haldaTuple2->SetValue(2, 200, SD);
-
-
-	haldaTuple3->SetValue(0, 3, SD);
-	haldaTuple3->SetValue(1, 18, SD);
-	haldaTuple3->SetValue(2, 300, SD);
-
-	haldaTuple4->SetValue(0, 4, SD);
-	haldaTuple4->SetValue(1, 27, SD);
-	haldaTuple4->SetValue(2, 400, SD);
-
-	haldaTuple5->SetValue(0, 5, SD);
-	haldaTuple5->SetValue(1, 41, SD);
-	haldaTuple5->SetValue(2, 500, SD);
-
-	haldaTuple6->SetValue(0, 6, SD);
-	haldaTuple6->SetValue(1, 66, SD);
-	haldaTuple6->SetValue(2, 666, SD);
-
-	haldaTuple7->SetValue(0, 7, SD);
-	haldaTuple7->SetValue(1, 77, SD);
-	haldaTuple7->SetValue(2, 777, SD);
-
-	haldaTuple8->SetValue(0, 8, SD);
-	haldaTuple8->SetValue(1, 88, SD);
-	haldaTuple8->SetValue(2, 888, SD);
-
-	haldaTuple9->SetValue(0, 9, SD);
-	haldaTuple9->SetValue(1, 99, SD);
-	haldaTuple9->SetValue(2, 999, SD);
-
-	haldaTuple10->SetValue(0, 10, SD);
-	haldaTuple10->SetValue(1, 100, SD);
-	haldaTuple10->SetValue(2, 111, SD);
 
 
 
-	
 
 
 
-/*  generator pro int*/
+
+
+	/*  generator pro int*/
 	int j = 100;
 	int k = 500;
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 100; i++)
 	{
 
 
@@ -475,7 +402,7 @@ int main()
 
 
 
-	
+
 
 	/*
 	//test dat
@@ -514,9 +441,11 @@ int main()
 	*/
 	cTuple item;
 
-	table->mKeyIndex->Open(table->mKeyHeader, quickDB);
+	//table->mKeyIndex->Open(table->mKeyHeader, quickDB);
 
 	table->mKeyIndex->PrintInfo();
+
+	table->mIndex->PrintInfo();
 
 	table->mKeyIndex->PrintNode(4);
 
@@ -565,7 +494,7 @@ int main()
 
 
 
-
+	/*
 	if (std::size_t foundDDL = query.find(dropDDL, 0) == 0)
 	{
 		cout << "drop was used" << endl;
@@ -584,7 +513,7 @@ int main()
 		cout << query;
 
 		cout << endl;
-		if (std::size_t foundTabulka = query.find("kokos", 12) == 12)
+		if (std::size_t foundTabulka = query.find("ahoj", 12) == 12)
 			cout << "table found" << endl;
 
 
@@ -606,7 +535,7 @@ int main()
 		cout << "commadn was not found";
 
 	}
-
+	*/
 	
 	printf("\nTest successfully completed!\n");
 	system("pause");
