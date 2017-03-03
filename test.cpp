@@ -347,7 +347,7 @@ int main()
 	/*  generator pro int*/
 	int j = 100;
 	int k = 500;
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 50; i++)
 	{
 
 
@@ -393,6 +393,7 @@ int main()
 	else if (typeofTranslator->type == Type::INDEX)
 	{
 		table->CreateIndex(query, quickDB, BLOCK_SIZE, DSMODE, COMPRESSION_RATIO, RUNTIME_MODE, CODETYPE, HISTOGRAMS, INMEMCACHE_SIZE);
+
 	}
 	else
 	{
@@ -439,49 +440,33 @@ int main()
 		}
 	}
 	*/
+
+
+	
 	cTuple item;
 
 	//table->mKeyIndex->Open(table->mKeyHeader, quickDB);
 
 	table->mKeyIndex->PrintInfo();
 
-	table->mIndex->PrintInfo();
+	table->mIndex1->PrintInfo();
 
-	table->mKeyIndex->PrintNode(4);
+	//table->mKeyIndex->PrintNode(4);
 
+	/*
 	cBpTreeNode<cTuple> *node1 = table->mKeyIndex->ReadInnerNodeR(1);//255 itemu
 	unsigned int pocet = node1->GetItemCount();
 	char *nodeData1 = (char*)node1->GetCItem(0);
 	int dataNode1 = cCommonNTuple<int>::GetInt(nodeData1, 1, table->keySD);
+	*/
 
-
-
-
-
-	cBpTreeNode<cTuple> *node2 = table->mKeyIndex->ReadLeafNodeR(2);//255 itemu
-	char *nodeData2 = (char*)node2->GetCItem(1);
-	int dataNode2 = cCommonNTuple<int>::GetInt(nodeData2, 0, table->keySD);
-
-	cBpTreeNode<cTuple> *node3 = table->mKeyIndex->ReadLeafNodeR(3);//3 itemy
-	char *nodeData3 = node3->GetData();
-	int dataNode3 = cCommonNTuple<int>::GetInt(nodeData3, 0, table->keySD);
-
-	cBpTreeNode<cTuple> *node4 = table->mKeyIndex->ReadLeafNodeR(4);//500
-	char *nodeData4 = node4->GetData();
-	int dataNode4 = cCommonNTuple<int>::GetInt(nodeData4, 0, table->keySD);
-
-
-	cBpTreeNode<cTuple> *leafnode = table->mKeyIndex->ReadLeafNodeR(4);//přístup na listové uzly
-	sItemBuffers *buffer = new sItemBuffers();
-
-	const char *leafKey = leafnode->GetCKey(0);
 
 	//create table ahoj(column1 CHAR(255),column2 FLOAT(255))....)
 	//create table ahoj(column1 INT NOT NULL,column2 FLOAT(255))
 	//create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)
 	//create table ahoj(column1 INT NOT NULL,column1 INT NOT NULL,column1 INT NOT NULL)
 
-	float floatKlic = 2.4;
+
 	cTuple *searchedTuple = table->FindKey(5);
 
 

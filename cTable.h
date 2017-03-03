@@ -34,8 +34,8 @@ public:
 	
 	/*Proměnné k indexu*/
 	
-	cBpTree<cTuple> *mIndex;//prázdné tělo stromu strom
-	cBpTreeHeader<cTuple> *mIndexHeader;
+	cBpTree<cTuple> *mIndex1;//prázdné tělo stromu strom
+	cBpTreeHeader<cTuple> *mIndexHeader1;
 
 public:
 
@@ -121,30 +121,40 @@ inline bool cTable::CreateIndex(string query, cQuickDB * quickDB, const unsigned
 			}
 		}
 	}
-
+	else
+	{
+		cout << "column dont exist" << endl;
+		exit(0);
+	}
+	
 	cSpaceDescriptor *indexSD = new cSpaceDescriptor(1, new cTuple(), indexType, false);
 	
 
 
-	mIndexHeader = new cBpTreeHeader<cTuple>(tableName.c_str(), BLOCK_SIZE, indexSD, indexSD->GetTypeSize(), indexSD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
-	mIndexHeader->SetRuntimeMode(RUNTIME_MODE);
-	mIndexHeader->SetCodeType(CODETYPE);
-	mIndexHeader->SetHistogramEnabled(HISTOGRAMS);
-	mIndexHeader->SetInMemCacheSize(INMEMCACHE_SIZE);
+	mIndexHeader1 = new cBpTreeHeader<cTuple>(tableName.c_str(), BLOCK_SIZE, indexSD, indexSD->GetTypeSize(), indexSD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
+	mIndexHeader1->SetRuntimeMode(RUNTIME_MODE);
+	mIndexHeader1->SetCodeType(CODETYPE);
+	mIndexHeader1->SetHistogramEnabled(HISTOGRAMS);
+	mIndexHeader1->SetInMemCacheSize(INMEMCACHE_SIZE);
 
 
 
-	mIndex = new cBpTree<cTuple>();
-	if (mIndex->Create(mIndexHeader, quickDB))
+	mIndex1 = new cBpTree<cTuple>();
+	bool succes = mIndex1->Create(mIndexHeader1, quickDB);
+	
+
+
+
+	if (succes)
 	{
 		for (int i = 1; i <= vHeap.size(); i++)
 		{
-			int siye = vHeap.size();
+			int size = vHeap.size();
 			cTuple *heapTuple = vHeap.at(i - 1);
 
 
 			cTuple *tuple = transportItem(heapTuple, indexSD, indexColumnPosition, indexType);
-			mIndex->Insert(*tuple, tuple->GetData());
+			mIndex1->Insert(*tuple, tuple->GetData());
 		}
 		return true;
 		
