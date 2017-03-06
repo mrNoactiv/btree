@@ -177,11 +177,11 @@ int main()
 
 
 	/*/.////----------------------------------------*/
-	//CREate table
-	cDataType *types[] = { new cChar(), new cInt() };
+
+	/*cDataType *types[] = { new cChar(), new cInt() };
 
 	cSpaceDescriptor * SDHet1 = new cSpaceDescriptor(2, new tKey_FixedLen(), types, false);
-	tKey_FixedLen* cTup = new cTuple(SDHet1);
+	tKey_FixedLen* cTup = new cTuple(SDHet1);*/
 	/*
 
 	cTup->SetValue(0, '1', SDHet1);
@@ -216,7 +216,7 @@ int main()
 
 	//zkusit udělat select
 
-
+	/*
 	char *stringVal = new char();
 	int intVal;
 
@@ -240,7 +240,7 @@ int main()
 	homoTuple->SetValue(3, 'h', homoSD);
 	homoTuple->SetValue(4, 'a', homoSD);
 
-
+	*/
 
 	/*
 	cSpaceDescriptor * homoSD = new cSpaceDescriptor(5, new tKey_FixedLen(), new cChar(), false);
@@ -253,7 +253,7 @@ int main()
 	homoTuple->SetValue(4, 'a', homoSD);
 	*/
 
-
+	/*
 
 	cDataType *types2[] = { new cInt(), homoTuple };
 	cSpaceDescriptor * SDHet2 = new cSpaceDescriptor(2, new tKey_FixedLen(), types2, false);
@@ -281,7 +281,7 @@ int main()
 	}
 	cout << endl;
 
-
+	*/
 	//std::vector<std::string>paramWithSize = { "CHAR","FLOAT" };
 
 	//create table b-strom
@@ -291,6 +291,97 @@ int main()
 		printf("Critical Error: Cache Data File was not created!\n");
 		exit(1);
 	}
+
+	/*bstrom1*/
+
+
+	cSpaceDescriptor * bugSD = new cSpaceDescriptor(1, new tKey_FixedLen(), new cInt(), false);
+	tKey_FixedLen* bugTuple = new cTuple(bugSD);
+
+
+	bugTuple->SetValue(0, 638, bugSD);
+
+
+	cBpTreeHeader<tKey_FixedLen> *mHeader_FixedLen = new cBpTreeHeader<tKey_FixedLen>("bug_strom", BLOCK_SIZE, bugSD, bugSD->GetTypeSize(), bugSD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
+	mHeader_FixedLen->SetRuntimeMode(RUNTIME_MODE);
+	mHeader_FixedLen->SetCodeType(CODETYPE);
+	mHeader_FixedLen->SetHistogramEnabled(HISTOGRAMS);
+	mHeader_FixedLen->SetInMemCacheSize(INMEMCACHE_SIZE);
+
+	cBpTree<tKey_FixedLen> *mIndex_FixedLen = new cBpTree<tKey_FixedLen>();
+	if (!mIndex_FixedLen->Create(mHeader_FixedLen, quickDB))
+	{
+		printf("TestCreate: creation failed!\n");
+	}
+
+	mIndex_FixedLen->Insert(*bugTuple, bugTuple->GetData());
+
+
+
+
+	cBpTreeNode<cTuple> *node1 = mIndex_FixedLen->ReadLeafNodeR(1);
+	char *itemData = (char*)node1->GetCItem(0);//vytahnuti dat z uzlu
+	int itemValue = cCommonNTuple<int>::GetInt(itemData, 0, bugSD);//vraci hodnotu 638,spravně
+
+	mIndex_FixedLen->PrintInfo();
+
+	/*bstrom2*/
+
+
+	cSpaceDescriptor * bugSD2 = new cSpaceDescriptor(1, new tKey_FixedLen(), new cInt(), false);
+	tKey_FixedLen* bugTuple2 = new cTuple(bugSD2);
+
+
+	bugTuple2->SetValue(0, 2238, bugSD2);
+
+
+	cBpTreeHeader<tKey_FixedLen> *mHeader_FixedLen2 = new cBpTreeHeader<tKey_FixedLen>("bug_strom2", BLOCK_SIZE, bugSD2, bugSD2->GetTypeSize(), bugSD2->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
+	mHeader_FixedLen->SetRuntimeMode(RUNTIME_MODE);
+	mHeader_FixedLen->SetCodeType(CODETYPE);
+	mHeader_FixedLen->SetHistogramEnabled(HISTOGRAMS);
+	mHeader_FixedLen->SetInMemCacheSize(INMEMCACHE_SIZE);
+
+	cBpTree<tKey_FixedLen> *mIndex_FixedLen2 = new cBpTree<tKey_FixedLen>();
+	if (!mIndex_FixedLen2->Create(mHeader_FixedLen2, quickDB))
+	{
+		printf("TestCreate: creation failed!\n");
+	}
+
+	mIndex_FixedLen2->Insert(*bugTuple2, bugTuple2->GetData());
+
+	mIndex_FixedLen2->PrintInfo();
+
+
+	cBpTreeNode<cTuple> *node2 = mIndex_FixedLen2->ReadLeafNodeR(1);
+	char *itemData2 = (char*)node2->GetCItem(0);//vytahnuti dat z uzlu
+	int itemValue2= cCommonNTuple<int>::GetInt(itemData2, 0, bugSD2);//vrací hodnotu 638,špatně
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	string query;
@@ -347,7 +438,7 @@ int main()
 	/*  generator pro int*/
 	int j = 100;
 	int k = 500;
-	for (int i = 0; i < 50; i++)
+	for (int i = 0; i < 10000; i++)
 	{
 
 
@@ -440,16 +531,20 @@ int main()
 		}
 	}
 	*/
-
-
 	
+
+
+
+
+
+
+
 	cTuple item;
 
 	//table->mKeyIndex->Open(table->mKeyHeader, quickDB);
 
-	table->mKeyIndex->PrintInfo();
-
-	table->mIndex1->PrintInfo();
+	table->indexes->at(0)->mIndex->PrintInfo();
+	table->indexes->at(1)->mIndex->PrintInfo();
 
 	//table->mKeyIndex->PrintNode(4);
 
@@ -467,7 +562,7 @@ int main()
 	//create table ahoj(column1 INT NOT NULL,column1 INT NOT NULL,column1 INT NOT NULL)
 
 
-	cTuple *searchedTuple = table->FindKey(5);
+	cTuple *searchedTuple = table->FindKey("AGE",105);
 
 
 	int id = searchedTuple->GetInt(0, SD);

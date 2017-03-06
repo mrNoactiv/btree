@@ -11,7 +11,7 @@
 #include <vector>
 #include "cTranslatorCreate.h"
 #include "cTranslatorIndex.h"
-
+#include "cCompleteBTree.h"
 
 class cTable
 {
@@ -21,8 +21,9 @@ public:
 
 	/*proměnné k  vytvoření stromu*/
 	std::vector<cTuple*> vHeap;//prázný vektor který se přetvoří na haldu jako rekace na create table
-	cBpTree<cTuple> *mKeyIndex;//prázdné tělo stromu strom
-	cBpTreeHeader<cTuple> *mKeyHeader;//prázdná hlavička
+	//cBpTree<cTuple> *mKeyIndex;//prázdné tělo stromu strom
+	//cBpTreeHeader<cTuple> *mKeyHeader;//prázdná hlavička
+	bool varlen;
 
 	cSpaceDescriptor *keySD;//SD pro klič
 	cDataType *keyType;//datovy typ kliče
@@ -33,34 +34,34 @@ public:
 	string tableName;
 	
 	/*Proměnné k indexu*/
+	std::vector<cCompleteBTree*>*indexes= new vector<cCompleteBTree*>();;
 	
-	cBpTree<cTuple> *mIndex1;//prázdné tělo stromu strom
-	cBpTreeHeader<cTuple> *mIndexHeader1;
+
 
 public:
 
 	cTable();
-	bool CreateTable(string query, cQuickDB *quickDB, const unsigned int BLOCK_SIZE, uint DSMODE, unsigned int COMPRESSION_RATIO, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, static const uint INMEMCACHE_SIZE);
-	bool CreateIndex(string query ,cQuickDB *quickDB, const unsigned int BLOCK_SIZE, uint DSMODE, unsigned int COMPRESSION_RATIO, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, static const uint INMEMCACHE_SIZE);
-		cBpTreeHeader<cTuple>*GetHeader();
-		cBpTree<cTuple>*GetIndex();
+	bool CreateTable(string query, cQuickDB *quickDB, const unsigned int BLOCK_SIZE, uint DSMODE, unsigned int compressionRatio, unsigned int codeType, unsigned int runtimeMode, bool histograms, static const uint inMemCacheSize);
+	bool CreateIndex(string query, cQuickDB * quickDB, const unsigned int BLOCK_SIZE, uint DSMODE, unsigned int compressionRatio, unsigned int codeType, unsigned int runtimeMode, bool histograms, const uint inMemCacheSize);
+	bool CreateClusteredIndex();
+
 		void SetValues(cTuple *tuple,cSpaceDescriptor *SD);
-		cTuple* FindKey(int searchedValue);
+		cTuple* FindKey(string column,int searchedValue);
 		cTuple* FindKey(float searchedValue);
-		cTuple * transportItem(cTuple *sourceTuple, cSpaceDescriptor *mSd, int position, cDataType *mType);
+		cTuple * TransportItem(cTuple *sourceTuple, cSpaceDescriptor *mSd, int columnPosition, cDataType *mType);
 
 };
 
-cTable::cTable():vHeap(NULL),mKeyIndex(NULL),mKeyHeader(NULL)
+cTable::cTable():vHeap(NULL)
 {
 	
 }
 
-inline bool cTable::CreateTable(string query, cQuickDB *quickDB,const unsigned int BLOCK_SIZE,uint DSMODE,unsigned int COMPRESSION_RATIO, unsigned int CODETYPE,unsigned int RUNTIME_MODE,bool HISTOGRAMS, static const uint INMEMCACHE_SIZE)
+inline bool cTable::CreateTable(string query, cQuickDB *quickDB,const unsigned int BLOCK_SIZE,uint DSMODE,unsigned int compressionRatio, unsigned int codeType,unsigned int runtimeMode,bool histograms, static const uint inMemCacheSize)
 {
-	
+	//bstrom1
 	cTranslatorCreate *translator=new cTranslatorCreate();//instance překladače
-	
+	cCompleteBTree *index;
 	
 	translator->TranlateCreate(query);//překladad cretae table
 	
@@ -69,11 +70,16 @@ inline bool cTable::CreateTable(string query, cQuickDB *quickDB,const unsigned i
 	SD = translator->SD;
 	columns = translator->columns;
 	tableName=translator->tableName;
+	varlen = translator->varlen;//proměnná delka
 	
 	std:make_heap(vHeap.begin(), vHeap.end());//vytvoření haldy
 
 	if (translator->typeOfCreate == BTREE)
 	{
+		
+		index = new cCompleteBTree(tableName.c_str(),translator->keyPosition, BLOCK_SIZE, keySD, keySD->GetTypeSize(), keySD->GetSize(), false, DSMODE, cDStructConst::BTREE, compressionRatio, codeType, runtimeMode, histograms, inMemCacheSize, quickDB);
+
+		/*
 		//vytváření b-stromu
 		mKeyHeader = new cBpTreeHeader<cTuple>(tableName.c_str(), BLOCK_SIZE, keySD, keySD->GetTypeSize(), keySD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
 		mKeyHeader->SetRuntimeMode(RUNTIME_MODE);
@@ -90,21 +96,39 @@ inline bool cTable::CreateTable(string query, cQuickDB *quickDB,const unsigned i
 			return false;
 		}
 		else
+			return true;*/
+
+		if (index != NULL)
+		{
+			indexes->push_back(index);
+			
 			return true;
+		}
+
 	}
 	else return true;
 
 }
 
-inline bool cTable::CreateIndex(string query, cQuickDB * quickDB, const unsigned int BLOCK_SIZE, uint DSMODE, unsigned int COMPRESSION_RATIO, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, const uint INMEMCACHE_SIZE)
+inline bool cTable::CreateIndex(string query, cQuickDB * quickDB, const unsigned int BLOCK_SIZE, uint DSMODE, unsigned int compressionRatio, unsigned int codeType, unsigned int runtimeMode, bool histograms, const uint inMemCacheSize)
 {
+	cCompleteBTree *index;
+	
 	cTranslatorIndex *translator = new cTranslatorIndex();//instance překladače
 	translator->TranslateCreateIndex(query);
 
+	//bstrom2
 
 	cDataType *indexType;
 	int size;
 	int indexColumnPosition;
+	string indexName = translator->indexName;
+	
+	
+	cDataType ** ptr;
+	ptr = new cDataType*[2];
+
+
 
 	if (translator->tableName.compare(tableName) == 0)
 	{
@@ -115,7 +139,11 @@ inline bool cTable::CreateIndex(string query, cQuickDB * quickDB, const unsigned
 			{
 				indexColumnPosition = columns->at(i)->positionInTable;
 				indexType = columns->at(i)->cType;
+				ptr[0] = indexType;//typ proměnné v indexu
+				ptr[1] = new cInt();//rowID
 				size = columns->at(i)->size;
+
+
 
 				i = columns->size();//vyzkočení z foru
 			}
@@ -127,67 +155,52 @@ inline bool cTable::CreateIndex(string query, cQuickDB * quickDB, const unsigned
 		exit(0);
 	}
 	
-	cSpaceDescriptor *indexSD = new cSpaceDescriptor(1, new cTuple(), indexType, false);
-	
+	cSpaceDescriptor *indexSD = new cSpaceDescriptor(2, new cTuple(), ptr, false);
+	index = new cCompleteBTree(indexName.c_str(), indexColumnPosition, BLOCK_SIZE, indexSD, indexSD->GetTypeSize(), indexSD->GetSize(), false, DSMODE, cDStructConst::BTREE, compressionRatio, codeType, runtimeMode, histograms, inMemCacheSize, quickDB);
 
 
-	mIndexHeader1 = new cBpTreeHeader<cTuple>(tableName.c_str(), BLOCK_SIZE, indexSD, indexSD->GetTypeSize(), indexSD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
-	mIndexHeader1->SetRuntimeMode(RUNTIME_MODE);
-	mIndexHeader1->SetCodeType(CODETYPE);
-	mIndexHeader1->SetHistogramEnabled(HISTOGRAMS);
-	mIndexHeader1->SetInMemCacheSize(INMEMCACHE_SIZE);
-
-
-
-	mIndex1 = new cBpTree<cTuple>();
-	bool succes = mIndex1->Create(mIndexHeader1, quickDB);
-	
-
-
-
-	if (succes)
+	if (index!=NULL)
 	{
 		for (int i = 1; i <= vHeap.size(); i++)
 		{
 			int size = vHeap.size();
+
 			cTuple *heapTuple = vHeap.at(i - 1);
 
 
-			cTuple *tuple = transportItem(heapTuple, indexSD, indexColumnPosition, indexType);
-			mIndex1->Insert(*tuple, tuple->GetData());
+			cTuple *tuple = TransportItem(heapTuple, indexSD, indexColumnPosition, indexType);
+			tuple->SetValue(1, i - 1, indexSD);
+
+			int tupleint = tuple->GetInt(0, indexSD);
+
+
+			index->mIndex->Insert(*tuple, tuple->GetData());
+
+			
+
+			
 		}
+		indexes->push_back(index);
 		return true;
-		
-		
 	}
 	else
 	{
 		printf("Index: creation failed!\n");
-		return false;
-		
+		return false;	
 	}
-		
-
-
-	
-
-
 }
 
-inline cBpTreeHeader<cTuple>* cTable::GetHeader()
+inline bool cTable::CreateClusteredIndex()
 {
-	return mKeyHeader;
+	return false;
 }
 
-inline cBpTree<cTuple>* cTable::GetIndex()
-{
-	return mKeyIndex;
-}
+
 
 inline void cTable::SetValues(cTuple *tuple, cSpaceDescriptor *SD)
 {
-	cTuple *keyTuple = transportItem(tuple, keySD, 0, keyType);
-
+	cTuple *keyTuple = TransportItem(tuple, keySD, 0, keyType);
+	cBpTree<cTuple> *mKeyIndex = indexes->at(0)->mIndex;
 
 	vHeap.push_back(tuple);
 	int rowID = vHeap.size();
@@ -196,12 +209,40 @@ inline void cTable::SetValues(cTuple *tuple, cSpaceDescriptor *SD)
 
 
 	mKeyIndex->Insert(*keyTuple, keyTuple->GetData());
-	mKeyIndex->Close();
 
 }
 
-inline cTuple* cTable::FindKey(int searchedValue)
+inline cTuple* cTable::FindKey(string column, int searchedValue)
 {
+	int searchedColumn;
+
+	for (int i = 0; i < columns->size(); i++)
+	{
+		if (columns->at(i)->name.compare(column) == 0)
+		{
+			searchedColumn = columns->at(i)->positionInTable;
+		}
+	}
+
+	cBpTreeHeader<cTuple> *mKeyHeader;
+	cBpTree<cTuple> *mKeyIndex;
+	
+	for (int i = 0; i < indexes->size(); i++)
+	{
+		if (indexes->at(i)->indexColumnPosition == searchedColumn)
+		{
+			mKeyHeader = indexes->at(1)->mIndexHeader;
+			mKeyIndex = indexes->at(1)->mIndex;
+		}
+		
+	}
+
+
+
+
+
+	/*funguje spravně jen pro keyIndex*/
+/*
 	int rowId;
 	int nodeCount = mKeyHeader->GetNodeCount();
 	int itemCount = mKeyHeader->GetItemCount();
@@ -219,7 +260,8 @@ inline cTuple* cTable::FindKey(int searchedValue)
 			if (itemValue == searchedValue)
 			{
 				rowId = cCommonNTuple<int>::GetInt(itemData, 1, keySD);
-				searchedTuple = vHeap.at(rowId - 1);			
+				searchedTuple = vHeap.at(rowId - 1);
+				i = itemCount;//vyzkočení z foru
 			}
 		}
 	}
@@ -229,11 +271,45 @@ inline cTuple* cTable::FindKey(int searchedValue)
 	}
 	else
 		return 0;
+		*/
+
+	int rowId;
+	int nodeCount = mKeyHeader->GetNodeCount();
+	int itemCount = mKeyHeader->GetItemCount();
+	cTuple *searchedTuple = NULL;
+
+	for (int i = 1; i <= nodeCount; i++)//pruchod všech uzlu
+	{
+		cBpTreeNode<cTuple> *node = mKeyIndex->ReadLeafNodeR(i);//přečteni jednotlivých uzlu
+		int itemCount = node->GetItemCount();
+
+		for (int i = 0; i < itemCount; i++)//pruchod jednotlivych itemu v uzlu
+		{
+			char *itemData = (char*)node->GetCItem(i);//vytahnuti dat z uzlu
+			int itemValue = cCommonNTuple<int>::GetInt(itemData, 0, keySD);//překlad na int
+			if (itemValue == searchedValue)
+			{
+				rowId = cCommonNTuple<int>::GetInt(itemData, 1, keySD);//přirazeni spravne rowID
+				searchedTuple = vHeap.at(rowId - 1);//navraceni celého záznamu ktery odpovida rowID
+				i = itemCount;//vyzkočení z foru
+			}
+		}
+	}
+	if (searchedTuple != NULL)
+	{
+		return searchedTuple;
+	}
+	else
+		return 0;
+
+
 }
 
 inline cTuple * cTable::FindKey(float searchedValue)
 {
-	
+	cBpTreeHeader<cTuple> *mKeyHeader = indexes->at(0)->mIndexHeader;
+	cBpTree<cTuple> *mKeyIndex = indexes->at(0)->mIndex;
+
 	int rowId;
 	int nodeCount = mKeyHeader->GetNodeCount();
 	int itemCount = mKeyHeader->GetItemCount();
@@ -263,43 +339,43 @@ inline cTuple * cTable::FindKey(float searchedValue)
 		return 0;
 }
 
-inline cTuple * cTable::transportItem(cTuple *sourceTuple, cSpaceDescriptor *mSd, int position, cDataType *mType)
+inline cTuple * cTable::TransportItem(cTuple *sourceTuple, cSpaceDescriptor *mSd, int columnPosition, cDataType *mType)
 {
 	cTuple *destTuple=new cTuple(mSd);
 	
 	if (mType->GetCode() == 'i')//int
 	{
-		int key = sourceTuple->GetInt(position, SD);
+		int key = sourceTuple->GetInt(columnPosition, SD);
 		destTuple->SetValue(0, key, mSd);
 	}
 	else if (mType->GetCode() == 'u')//uint
 	{
-		unsigned int key = sourceTuple->GetUInt(position, SD);
+		unsigned int key = sourceTuple->GetUInt(columnPosition, SD);
 		destTuple->SetValue(0, key, mSd);
 	}
 	else if (mType->GetCode() == 'f')//float, nepodporovan
 	{
-		float key = sourceTuple->GetFloat(position, SD);
+		float key = sourceTuple->GetFloat(columnPosition, SD);
 		destTuple->SetValue(0, key, mSd);
 	}
 	else if (mType->GetCode() == 'n')//varchar,neodzkoušeno
 	{
-		cNTuple varcharTuple = sourceTuple->GetTuple(position, SD);
+		cNTuple varcharTuple = sourceTuple->GetTuple(columnPosition, SD);
 		destTuple->SetValue(0, *varcharTuple, SD);
 	}
 	else if (mType->GetCode() == 'c')//char(nejasny Get)
 	{
-		char key= sourceTuple->GetWChar(position, SD);
+		char key= sourceTuple->GetWChar(columnPosition, SD);
 		destTuple->SetValue(0, key, mSd);
 	}
 	else if (mType->GetCode() == 's')//short
 	{
-		short key = sourceTuple->GetUShort(position, SD);
+		short key = sourceTuple->GetUShort(columnPosition, SD);
 		destTuple->SetValue(0, key, mSd);
 	}
 	else if (mType->GetCode() == 'S')//unsigned short
 	{
-		unsigned short key = sourceTuple->GetUShort(position, SD);
+		unsigned short key = sourceTuple->GetUShort(columnPosition, SD);
 		destTuple->SetValue(0, key, mSd);
 	}
 	return destTuple;

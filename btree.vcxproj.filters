@@ -414,6 +414,9 @@
     <ClInclude Include="cTranslatorIndex.h">
       <Filter>Test\MyCode</Filter>
     </ClInclude>
+    <ClInclude Include="cCompleteBTree.h">
+      <Filter>Test\MyCode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\common\cBitString.cpp">

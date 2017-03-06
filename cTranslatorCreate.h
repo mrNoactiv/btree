@@ -18,7 +18,9 @@ public:
 	cSpaceDescriptor * SD;
 	cSpaceDescriptor * keySD;
 	cDataType *keyType;
+	int keyPosition;
 	bool homogenous = true;
+	bool varlen=false;
 	TypeOfCreate typeOfCreate;
 
 
@@ -35,6 +37,7 @@ public:
 	cSpaceDescriptor* CreateFixSpaceDescriptor();
 	cSpaceDescriptor* CreateKeySpaceDescriptor();
 	cSpaceDescriptor* GetSpaceDescriptor();
+	
 
 
 };
@@ -144,6 +147,11 @@ inline void cTranslatorCreate::TranlateCreate(string input)
 
 			std::reverse(TMPSize.begin(), TMPSize.end());//preklopení datového typu sloupce
 			column->size = std::stoi(TMPSize);
+			if (column->size > 0)
+			{
+				varlen = true;
+			}
+
 			if (column->cType->GetCode() == 'n')//pokud je typ tuple(VARCHAR)
 			{
 				cDataType ** ptr;
@@ -180,6 +188,7 @@ inline void cTranslatorCreate::TranlateCreate(string input)
 		}
 		if (input.find("PRIMARY KEY", position + 1) == position + 1)
 		{
+			keyPosition = column->positionInTable;
 			column->primaryKey = true;
 			position = position + 12;
 			column->notNull = true;
@@ -323,6 +332,8 @@ inline cSpaceDescriptor* cTranslatorCreate::GetSpaceDescriptor()
 {
 	return SD;
 }
+
+
 
 
 
