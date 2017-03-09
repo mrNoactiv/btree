@@ -115,12 +115,33 @@ uint TUPLE_LENGTHS_COUNT() { return sizeof(TUPLE_LENGTHS) / sizeof(uint); };
 uint DATA_LENGTHS_COUNT() { return sizeof(DATA_LENGTHS) / sizeof(uint); };
 
 
-
-
+/*Start bullshit*/
+template <class T>
+struct Vec {
+	T data;
+	T getData() {
+		printf("Generic\n");
+		return data;
+	}
+};
+template <>
+struct Vec<bool> {
+	bool data;
+	bool getData() {
+		printf("concrete");
+		return data;
+	}
+};
 
 
 int main()
 {
+
+	Vec<int> data = Vec<int>();
+	data.getData();
+
+	Vec<bool> data2 = Vec<bool>();
+	data2.getData();
 	/*
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
@@ -216,10 +237,10 @@ int main()
 
 	//zkusit udělat select
 
-	/*
+	
 	char *stringVal = new char();
 	int intVal;
-
+	/*
 	cDataType *typesString[] = { new cChar(),new cChar(),new cChar(),new cChar(),new cChar() };
 	cSpaceDescriptor * SDHetStr = new cSpaceDescriptor(5, new tKey_VarLen(), typesString, false);
 	tKey_VarLen* cTupString = new cNTuple(SDHetStr);
@@ -228,10 +249,10 @@ int main()
 	cTupString->SetValue(2, 'o', SDHetStr);
 	cTupString->SetValue(3, 'j', SDHetStr);
 	cTupString->SetValue(4, '!', SDHetStr);
+	*/
 
-
-
-	cSpaceDescriptor * homoSD = new cSpaceDescriptor(5, new tKey_VarLen(), new cChar(), false);
+	
+	cSpaceDescriptor * homoSD = new cSpaceDescriptor(10, new tKey_VarLen(), new cChar(), false);
 	tKey_VarLen* homoTuple = new cNTuple(homoSD);
 
 	homoTuple->SetValue(0, 'a', homoSD);
@@ -239,8 +260,8 @@ int main()
 	homoTuple->SetValue(2, 'o', homoSD);
 	homoTuple->SetValue(3, 'h', homoSD);
 	homoTuple->SetValue(4, 'a', homoSD);
-
-	*/
+	
+	
 
 	/*
 	cSpaceDescriptor * homoSD = new cSpaceDescriptor(5, new tKey_FixedLen(), new cChar(), false);
@@ -253,7 +274,7 @@ int main()
 	homoTuple->SetValue(4, 'a', homoSD);
 	*/
 
-	/*
+	
 
 	cDataType *types2[] = { new cInt(), homoTuple };
 	cSpaceDescriptor * SDHet2 = new cSpaceDescriptor(2, new tKey_FixedLen(), types2, false);
@@ -264,27 +285,31 @@ int main()
 	cTupN->SetValue(1, *homoTuple, SDHet2);
 
 	char * TEMPTupleOrigo = homoTuple->GetData();
-	char * TEMPTuple = cTupN->GetTuple(1, SDHet2);
+	char * TEMPTuple = cTupN->GetTuple(1, SDHet2);// pro fixlen tuple
+	//char * TEMPTuple = cTupN->GetTuple(*homoTuple,1,SDHet2);//pro varlen tuple
 	intVal = cTupN->GetInt(0, SDHet2);
 
 	cout << "Int hodnota: " << intVal << ", string hodnota: ";
-	for (int i = 0; i < cTupString->GetDimension(homoSD); i++)
+	for (int i = 0; i < homoTuple->GetDimension(homoSD); i++)
 	{
 		stringVal[i] = cCommonNTuple<char>::GetCChar(TEMPTuple, i, homoSD);
 		//temchar= cCommonNTuple<char>::GetCChar(TEMPTuple, i, SDHetStr);
 	}
 
-	for (int i = 0; i < cTupString->GetDimension(SDHetStr); i++)
+	for (int i = 0; i < homoTuple->GetDimension(homoSD); i++)
 	{
 		printf("%c", stringVal[i]);
 
 	}
 	cout << endl;
-
-	*/
+	
+	
 	//std::vector<std::string>paramWithSize = { "CHAR","FLOAT" };
 
 	//create table b-strom
+	
+
+
 	cQuickDB *quickDB = new cQuickDB();
 	if (!quickDB->Create(dbPath, CACHE_SIZE, MAX_NODE_INMEM_SIZE, BLOCK_SIZE))
 	{
@@ -293,8 +318,8 @@ int main()
 	}
 
 	/*bstrom1*/
-
-
+	
+	
 	cSpaceDescriptor * bugSD = new cSpaceDescriptor(1, new tKey_FixedLen(), new cInt(), false);
 	tKey_FixedLen* bugTuple = new cTuple(bugSD);
 
@@ -324,22 +349,22 @@ int main()
 	int itemValue = cCommonNTuple<int>::GetInt(itemData, 0, bugSD);//vraci hodnotu 638,spravně
 
 	mIndex_FixedLen->PrintInfo();
-
+	
 	/*bstrom2*/
 
-
-	cSpaceDescriptor * bugSD2 = new cSpaceDescriptor(1, new tKey_FixedLen(), new cInt(), false);
+	cDataType *types[] = { new cInt(), new cInt() };
+	cSpaceDescriptor * bugSD2 = new cSpaceDescriptor(2, new tKey_FixedLen(), types, false);
 	tKey_FixedLen* bugTuple2 = new cTuple(bugSD2);
 
 
 	bugTuple2->SetValue(0, 2238, bugSD2);
-
+	bugTuple2->SetValue(1, 4256, bugSD2);
 
 	cBpTreeHeader<tKey_FixedLen> *mHeader_FixedLen2 = new cBpTreeHeader<tKey_FixedLen>("bug_strom2", BLOCK_SIZE, bugSD2, bugSD2->GetTypeSize(), bugSD2->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
-	mHeader_FixedLen->SetRuntimeMode(RUNTIME_MODE);
-	mHeader_FixedLen->SetCodeType(CODETYPE);
-	mHeader_FixedLen->SetHistogramEnabled(HISTOGRAMS);
-	mHeader_FixedLen->SetInMemCacheSize(INMEMCACHE_SIZE);
+	mHeader_FixedLen2->SetRuntimeMode(RUNTIME_MODE);
+	mHeader_FixedLen2->SetCodeType(CODETYPE);
+	mHeader_FixedLen2->SetHistogramEnabled(HISTOGRAMS);
+	mHeader_FixedLen2->SetInMemCacheSize(INMEMCACHE_SIZE);
 
 	cBpTree<tKey_FixedLen> *mIndex_FixedLen2 = new cBpTree<tKey_FixedLen>();
 	if (!mIndex_FixedLen2->Create(mHeader_FixedLen2, quickDB))
@@ -356,7 +381,7 @@ int main()
 	char *itemData2 = (char*)node2->GetCItem(0);//vytahnuti dat z uzlu
 	int itemValue2= cCommonNTuple<int>::GetInt(itemData2, 0, bugSD2);//vrací hodnotu 638,špatně
 
-
+	
 
 
 
@@ -387,8 +412,9 @@ int main()
 	string query;
 	//query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)";
 	query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,AGE INT,KIDS INT) option:BTREE";
-
-
+	//query = "create table ahoj(ID INT NOT NULL,AGE INT PRIMARY KEY,KIDS INT) option:BTREE";
+	//query = "create table ahoj(column2 VARCHAR(5) PRIMARY KEY)";
+	//query = "create table ahoj(ID INT PRIMARY KEY,column2 VARCHAR(5))";
 	cTypeOfTranslator *typeofTranslator = new cTypeOfTranslator();
 	typeofTranslator->SetType(query);
 
@@ -436,6 +462,7 @@ int main()
 
 
 	/*  generator pro int*/
+	
 	int j = 100;
 	int k = 500;
 	for (int i = 0; i < 10000; i++)
@@ -451,6 +478,38 @@ int main()
 		table->SetValues(haldaTuple, SD);
 
 	}
+	
+	/*  generator pro varchar*/
+	/*
+	int randNumber;
+	srand(time(NULL));
+	
+	for (int i = 0; i < 1000; i++)
+	{
+		
+		
+		cNTuple * varcharTuple = new cNTuple(table->columns->at(1)->columnSD);
+		
+		for (int i = 0; i < table->columns->at(1)->size; i++)
+		{
+			randNumber = rand() % 94 + 20;
+			varcharTuple->SetValue(i,(char)randNumber, table->columns->at(1)->columnSD);
+		}
+
+		cTuple* haldaTuple = new cTuple(SD);
+		SD->SetDimSpaceDescriptor(0, table->columns->at(1)->columnSD);
+
+		haldaTuple->SetValue(0, i, SD);
+		haldaTuple->SetValue(1, *varcharTuple, SD);
+
+
+		table->SetValues(haldaTuple, SD);
+
+	}
+	
+	*/
+	
+	
 	/*generator pro float klic*/
 	/*
 	int j = 100;
@@ -470,7 +529,7 @@ int main()
 	}
 	*/
 
-
+	
 	query = "create index index_name ON ahoj(AGE)";
 
 	typeofTranslator->SetType(query);
@@ -490,7 +549,7 @@ int main()
 	{
 		cout << "command not found" << endl;
 	}
-
+	
 
 
 
@@ -543,8 +602,8 @@ int main()
 
 	//table->mKeyIndex->Open(table->mKeyHeader, quickDB);
 
-	table->indexes->at(0)->mIndex->PrintInfo();
-	table->indexes->at(1)->mIndex->PrintInfo();
+	table->indexesFixLen->at(0)->mIndex->PrintInfo();
+	//table->indexes->at(1)->mIndex->PrintInfo();
 
 	//table->mKeyIndex->PrintNode(4);
 
@@ -562,7 +621,7 @@ int main()
 	//create table ahoj(column1 INT NOT NULL,column1 INT NOT NULL,column1 INT NOT NULL)
 
 
-	cTuple *searchedTuple = table->FindKey("AGE",105);
+	cTuple *searchedTuple = table->FindKey("ID",105);
 
 
 	int id = searchedTuple->GetInt(0, SD);
@@ -871,6 +930,7 @@ void Create_FixedLen()
 	}
 
 	// B-tree
+	
 	cBpTreeHeader<tKey_FixedLen> *mHeader_FixedLen = new cBpTreeHeader<tKey_FixedLen>("btree1", BLOCK_SIZE, generator_FixedLen->GetSpaceDescriptor(), generator_FixedLen->GetSpaceDescriptor()->GetTypeSize(), DATA_LENGTH, false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
 	mHeader_FixedLen->SetRuntimeMode(RUNTIME_MODE);
 	mHeader_FixedLen->SetCodeType(CODETYPE);

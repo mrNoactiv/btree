@@ -20,7 +20,8 @@ public:
 	cDataType *keyType;
 	int keyPosition;
 	bool homogenous = true;
-	bool varlen=false;
+	bool keyVarlen = false;
+	//bool varlen=false;
 	TypeOfCreate typeOfCreate;
 
 
@@ -35,8 +36,10 @@ public:
 	vector<cColumn*>GetColumns();
 	//const char * GetTableName();
 	cSpaceDescriptor* CreateFixSpaceDescriptor();
-	cSpaceDescriptor* CreateKeySpaceDescriptor();
-	cSpaceDescriptor* GetSpaceDescriptor();
+	cSpaceDescriptor* CreateVarSpaceDescriptor();
+	cSpaceDescriptor* CreateFixKeySpaceDescriptor();
+	cSpaceDescriptor* CreateVarKeySpaceDescriptor();
+	
 	
 
 
@@ -147,10 +150,10 @@ inline void cTranslatorCreate::TranlateCreate(string input)
 
 			std::reverse(TMPSize.begin(), TMPSize.end());//preklopení datového typu sloupce
 			column->size = std::stoi(TMPSize);
-			if (column->size > 0)
+			/*if (column->size > 0)
 			{
 				varlen = true;
-			}
+			}*/
 
 			if (column->cType->GetCode() == 'n')//pokud je typ tuple(VARCHAR)
 			{
@@ -192,6 +195,11 @@ inline void cTranslatorCreate::TranlateCreate(string input)
 			column->primaryKey = true;
 			position = position + 12;
 			column->notNull = true;
+			if (column->size != NULL)
+			{
+				keyVarlen = true;
+			}
+
 		}
 		else
 		{
@@ -229,8 +237,18 @@ inline void cTranslatorCreate::TranlateCreate(string input)
 		typeOfCreate = BTREE;
 
 	
-	CreateFixSpaceDescriptor();
-	CreateKeySpaceDescriptor();
+	if (keyVarlen)
+	{
+		//CreateVarSpaceDescriptor();
+		CreateFixSpaceDescriptor();
+		CreateVarKeySpaceDescriptor();
+	}
+	else
+	{
+		CreateFixSpaceDescriptor();
+		CreateFixKeySpaceDescriptor();
+	}
+	
 }
 
 
@@ -293,7 +311,45 @@ inline cSpaceDescriptor* cTranslatorCreate::CreateFixSpaceDescriptor()
 	
 }
 
-inline cSpaceDescriptor * cTranslatorCreate::CreateKeySpaceDescriptor()
+inline cSpaceDescriptor * cTranslatorCreate::CreateVarSpaceDescriptor()
+{
+	if (!homogenous)
+	{
+		cDataType *typ = new cInt();
+		cDataType ** ptr;
+		ptr = new cDataType*[columns->size()];
+		int i;
+
+		for (i = 0; i < columns->size(); i++)
+		{
+			ptr[i] = columns->at(i)->cType;
+		}
+
+		//ptr[i] = new cInt();// cBasicType<cDataType*>::GetType("INT");
+		SD = new cSpaceDescriptor(columns->size(), new cNTuple(), ptr, false);//SD tuplu
+	}
+	else
+	{
+		/*cDataType *typ = new cInt();
+		cDataType ** ptr;
+		ptr = new cDataType*[columns->size()+1];
+		int i;
+
+		for ( i = 0; i < columns->size(); i++)
+		{
+		ptr[i] = columns->at(i)->cType;
+		}
+
+		ptr[i] = new cInt();// cBasicType<cDataType*>::GetType("INT");
+		SD = new cSpaceDescriptor(columns->size()+1, new cTuple(), ptr, false);//SD tuplu
+		*/
+
+		SD = new cSpaceDescriptor(columns->size(), new cNTuple(), columns->at(0)->cType, false);//SD tuplu
+	}
+	return SD;
+}
+
+inline cSpaceDescriptor * cTranslatorCreate::CreateFixKeySpaceDescriptor()
 {
 	/*
 	for (int i = 0; i < columns->size(); i++)
@@ -328,10 +384,42 @@ inline cSpaceDescriptor * cTranslatorCreate::CreateKeySpaceDescriptor()
 	return keySD;
 }
 
-inline cSpaceDescriptor* cTranslatorCreate::GetSpaceDescriptor()
+inline cSpaceDescriptor * cTranslatorCreate::CreateVarKeySpaceDescriptor()
 {
-	return SD;
+
+	/*
+	for (int i = 0; i < columns->size(); i++)
+	{
+	if (columns->at(i)->primaryKey)
+	{
+	keyType = columns->at(i)->cType;
+	}
+	}
+	keySD= new cSpaceDescriptor(1, new cTuple(), keyType, false);
+	*/
+	//nebo
+
+	cDataType *typ = new cInt();
+	cDataType ** ptr;
+	ptr = new cDataType*[2];
+
+
+	for (int i = 0; i < columns->size(); i++)
+	{
+		if (columns->at(i)->primaryKey)
+		{
+			keyType = columns->at(i)->cType;
+			ptr[0] = keyType;
+		}
+	}
+
+	ptr[1] = new cInt();
+	keySD = new cSpaceDescriptor(2, new cNTuple(), ptr, false);
+
+
+	return keySD;
 }
+
 
 
 
