@@ -10,18 +10,18 @@ public:
 	cBpTreeHeader<TKey> *mIndexHeader;
 	int indexColumnPosition;
 
-	cCompleteBTree(const char* uniqueName,int position, uint blockSize, cDTDescriptor *dd, uint keySize, uint dataSize,bool variableLenData, uint dsMode, uint treeCode, uint compressionRatio, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, static const uint INMEMCACHE_SIZE, cQuickDB *quickDB);
-	bool SetBTree(const char* uniqueName, uint blockSize, cDTDescriptor *dd, uint keySize, uint dataSize, bool variableLenData, uint dsMode, uint treeCode, uint compressionRatio, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, static const uint INMEMCACHE_SIZE, cQuickDB *quickDB);
+	cCompleteBTree(const char* uniqueName,int position, uint blockSize, cSpaceDescriptor *dd, uint keySize, uint dataSize,bool variableLenData, uint dsMode, uint treeCode, uint compressionRatio, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, static const uint INMEMCACHE_SIZE, cQuickDB *quickDB);
+	bool SetBTree(const char* uniqueName, uint blockSize, cSpaceDescriptor *dd, uint keySize, uint dataSize, bool variableLenData, uint dsMode, uint treeCode, uint compressionRatio, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, static const uint INMEMCACHE_SIZE, cQuickDB *quickDB);
 
 };
 template<class TKey>
-cCompleteBTree<TKey>::cCompleteBTree(const char* uniqueName,int position, uint blockSize, cDTDescriptor *dd, uint keySize, uint dataSize, bool variableLenData, uint dsMode, uint treeCode, uint compressionRatio, unsigned int codeType, unsigned int runtimeMode, bool histograms, static const uint inMemCacheSize, cQuickDB *quickDB)
+cCompleteBTree<TKey>::cCompleteBTree(const char* uniqueName,int position, uint blockSize, cSpaceDescriptor *dd, uint keySize, uint dataSize, bool variableLenData, uint dsMode, uint treeCode, uint compressionRatio, unsigned int codeType, unsigned int runtimeMode, bool histograms, static const uint inMemCacheSize, cQuickDB *quickDB)
 {
 	SetBTree(uniqueName, blockSize, dd, keySize, dataSize, variableLenData, dsMode, treeCode, compressionRatio, codeType, runtimeMode, histograms, inMemCacheSize,quickDB);
 	indexColumnPosition = position;
 }
 template<class TKey>
-inline bool cCompleteBTree<TKey>::SetBTree(const char* uniqueName, uint blockSize, cDTDescriptor *dd, uint keySize, uint dataSize, bool variableLenData, uint dsMode, uint treeCode, uint compressionRatio, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, static const uint INMEMCACHE_SIZE, cQuickDB *quickDB)
+inline bool cCompleteBTree<TKey>::SetBTree(const char* uniqueName, uint blockSize, cSpaceDescriptor *dd, uint keySize, uint dataSize, bool variableLenData, uint dsMode, uint treeCode, uint compressionRatio, unsigned int CODETYPE, unsigned int RUNTIME_MODE, bool HISTOGRAMS, static const uint INMEMCACHE_SIZE, cQuickDB *quickDB)
 {
 	mIndexHeader = new cBpTreeHeader<TKey>(uniqueName, blockSize, dd, keySize, dataSize, variableLenData, dsMode, treeCode, compressionRatio);
 	mIndexHeader->SetRuntimeMode(RUNTIME_MODE);

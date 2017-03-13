@@ -331,6 +331,7 @@
     <ClInclude Include="cTranslatorCreate.h" />
     <ClInclude Include="cTranslatorIndex.h" />
     <ClInclude Include="cTypeOfTranslator.h" />
+    <ClInclude Include="testHeader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\common\cBitArray.cpp" />

@@ -115,33 +115,12 @@ uint TUPLE_LENGTHS_COUNT() { return sizeof(TUPLE_LENGTHS) / sizeof(uint); };
 uint DATA_LENGTHS_COUNT() { return sizeof(DATA_LENGTHS) / sizeof(uint); };
 
 
-/*Start bullshit*/
-template <class T>
-struct Vec {
-	T data;
-	T getData() {
-		printf("Generic\n");
-		return data;
-	}
-};
-template <>
-struct Vec<bool> {
-	bool data;
-	bool getData() {
-		printf("concrete");
-		return data;
-	}
-};
-
 
 int main()
 {
 
-	Vec<int> data = Vec<int>();
-	data.getData();
 
-	Vec<bool> data2 = Vec<bool>();
-	data2.getData();
+
 	/*
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
@@ -237,8 +216,8 @@ int main()
 
 	//zkusit udělat select
 
-	
-	char *stringVal = new char();
+
+	vector<char> *stringVal = new vector<char>();
 	int intVal;
 	/*
 	cDataType *typesString[] = { new cChar(),new cChar(),new cChar(),new cChar(),new cChar() };
@@ -251,7 +230,7 @@ int main()
 	cTupString->SetValue(4, '!', SDHetStr);
 	*/
 
-	
+
 	cSpaceDescriptor * homoSD = new cSpaceDescriptor(10, new tKey_VarLen(), new cChar(), false);
 	tKey_VarLen* homoTuple = new cNTuple(homoSD);
 
@@ -260,8 +239,11 @@ int main()
 	homoTuple->SetValue(2, 'o', homoSD);
 	homoTuple->SetValue(3, 'h', homoSD);
 	homoTuple->SetValue(4, 'a', homoSD);
-	
-	
+
+
+
+
+		
 
 	/*
 	cSpaceDescriptor * homoSD = new cSpaceDescriptor(5, new tKey_FixedLen(), new cChar(), false);
@@ -274,7 +256,34 @@ int main()
 	homoTuple->SetValue(4, 'a', homoSD);
 	*/
 
-	
+	cDataType *typ[] = { new cInt(), homoTuple };
+	cSpaceDescriptor * kokotSD = new cSpaceDescriptor(2, new cHNTuple(), typ, false);
+	cHNTuple *kurvafix = new cHNTuple();
+	kokotSD->SetDimSpaceDescriptor(1, homoSD);
+	kurvafix->Resize(kokotSD);
+
+
+	kurvafix->SetValue(0, 514515, kokotSD);
+	kurvafix->SetValue(1, *homoTuple, kokotSD);
+
+
+	int picafix = kurvafix->GetInt(0, kokotSD);
+	char * kokotTempTuple = kurvafix->GetNTuple(1, kokotSD);
+	for (int i = 0; i < homoTuple->GetDimension(homoSD); i++)
+	{
+		stringVal->push_back(cCommonNTuple<char>::GetCChar(kokotTempTuple, i, homoSD));
+		//temchar= cCommonNTuple<char>::GetCChar(TEMPTuple, i, SDHetStr);
+	}
+	for (int i = 0; i < stringVal->size(); i++)
+	{
+		printf("%c", stringVal->at(i));
+
+	}
+	cout << endl;
+
+
+
+	/*
 
 	cDataType *types2[] = { new cInt(), homoTuple };
 	cSpaceDescriptor * SDHet2 = new cSpaceDescriptor(2, new tKey_FixedLen(), types2, false);
@@ -303,7 +312,7 @@ int main()
 	}
 	cout << endl;
 	
-	
+	*/
 	//std::vector<std::string>paramWithSize = { "CHAR","FLOAT" };
 
 	//create table b-strom
@@ -317,97 +326,7 @@ int main()
 		exit(1);
 	}
 
-	/*bstrom1*/
 	
-	
-	cSpaceDescriptor * bugSD = new cSpaceDescriptor(1, new tKey_FixedLen(), new cInt(), false);
-	tKey_FixedLen* bugTuple = new cTuple(bugSD);
-
-
-	bugTuple->SetValue(0, 638, bugSD);
-
-
-	cBpTreeHeader<tKey_FixedLen> *mHeader_FixedLen = new cBpTreeHeader<tKey_FixedLen>("bug_strom", BLOCK_SIZE, bugSD, bugSD->GetTypeSize(), bugSD->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
-	mHeader_FixedLen->SetRuntimeMode(RUNTIME_MODE);
-	mHeader_FixedLen->SetCodeType(CODETYPE);
-	mHeader_FixedLen->SetHistogramEnabled(HISTOGRAMS);
-	mHeader_FixedLen->SetInMemCacheSize(INMEMCACHE_SIZE);
-
-	cBpTree<tKey_FixedLen> *mIndex_FixedLen = new cBpTree<tKey_FixedLen>();
-	if (!mIndex_FixedLen->Create(mHeader_FixedLen, quickDB))
-	{
-		printf("TestCreate: creation failed!\n");
-	}
-
-	mIndex_FixedLen->Insert(*bugTuple, bugTuple->GetData());
-
-
-
-
-	cBpTreeNode<cTuple> *node1 = mIndex_FixedLen->ReadLeafNodeR(1);
-	char *itemData = (char*)node1->GetCItem(0);//vytahnuti dat z uzlu
-	int itemValue = cCommonNTuple<int>::GetInt(itemData, 0, bugSD);//vraci hodnotu 638,spravně
-
-	mIndex_FixedLen->PrintInfo();
-	
-	/*bstrom2*/
-
-	cDataType *types[] = { new cInt(), new cInt() };
-	cSpaceDescriptor * bugSD2 = new cSpaceDescriptor(2, new tKey_FixedLen(), types, false);
-	tKey_FixedLen* bugTuple2 = new cTuple(bugSD2);
-
-
-	bugTuple2->SetValue(0, 2238, bugSD2);
-	bugTuple2->SetValue(1, 4256, bugSD2);
-
-	cBpTreeHeader<tKey_FixedLen> *mHeader_FixedLen2 = new cBpTreeHeader<tKey_FixedLen>("bug_strom2", BLOCK_SIZE, bugSD2, bugSD2->GetTypeSize(), bugSD2->GetSize(), false, DSMODE, cDStructConst::BTREE, COMPRESSION_RATIO);
-	mHeader_FixedLen2->SetRuntimeMode(RUNTIME_MODE);
-	mHeader_FixedLen2->SetCodeType(CODETYPE);
-	mHeader_FixedLen2->SetHistogramEnabled(HISTOGRAMS);
-	mHeader_FixedLen2->SetInMemCacheSize(INMEMCACHE_SIZE);
-
-	cBpTree<tKey_FixedLen> *mIndex_FixedLen2 = new cBpTree<tKey_FixedLen>();
-	if (!mIndex_FixedLen2->Create(mHeader_FixedLen2, quickDB))
-	{
-		printf("TestCreate: creation failed!\n");
-	}
-
-	mIndex_FixedLen2->Insert(*bugTuple2, bugTuple2->GetData());
-
-	mIndex_FixedLen2->PrintInfo();
-
-
-	cBpTreeNode<cTuple> *node2 = mIndex_FixedLen2->ReadLeafNodeR(1);
-	char *itemData2 = (char*)node2->GetCItem(0);//vytahnuti dat z uzlu
-	int itemValue2= cCommonNTuple<int>::GetInt(itemData2, 0, bugSD2);//vrací hodnotu 638,špatně
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	string query;
 	//query = "create table ahoj(ID INT NOT NULL PRIMARY KEY,column2 VARCHAR(5) NOT NULL,column3 CHAR(5) NOT NULL,column4 CHAR(5) NOT NULL,column5 CHAR(5) NOT NULL,column6 CHAR(5) NOT NULL)";
@@ -602,7 +521,7 @@ int main()
 
 	//table->mKeyIndex->Open(table->mKeyHeader, quickDB);
 
-	table->indexesFixLen->at(0)->mIndex->PrintInfo();
+	//table->indexesFixLen->at(0)->mIndex->PrintInfo();
 	//table->indexes->at(1)->mIndex->PrintInfo();
 
 	//table->mKeyIndex->PrintNode(4);
@@ -621,13 +540,13 @@ int main()
 	//create table ahoj(column1 INT NOT NULL,column1 INT NOT NULL,column1 INT NOT NULL)
 
 
-	cTuple *searchedTuple = table->FindKey("ID",105);
+	//cTuple *searchedTuple = table->FindKey("ID",105);
 
-
+	/*
 	int id = searchedTuple->GetInt(0, SD);
 	int age = searchedTuple->GetInt(1, SD);
 	int kids = searchedTuple->GetInt(2, SD);
-
+	*/
 	
 
 

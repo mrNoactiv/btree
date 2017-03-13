@@ -5,7 +5,7 @@
 #include "cColumn.h"
 
 
-enum TypeOfCreate { BTREE, RTREE };
+enum TypeOfCreate { BTREE, CLUSTERED_INDEX };
 class cTranslatorCreate
 {
 public:
@@ -21,7 +21,7 @@ public:
 	int keyPosition;
 	bool homogenous = true;
 	bool keyVarlen = false;
-	//bool varlen=false;
+	bool varlen=false;
 	TypeOfCreate typeOfCreate;
 
 
@@ -150,10 +150,10 @@ inline void cTranslatorCreate::TranlateCreate(string input)
 
 			std::reverse(TMPSize.begin(), TMPSize.end());//preklopení datového typu sloupce
 			column->size = std::stoi(TMPSize);
-			/*if (column->size > 0)
+			if (column->size > 0)
 			{
 				varlen = true;
-			}*/
+			}
 
 			if (column->cType->GetCode() == 'n')//pokud je typ tuple(VARCHAR)
 			{
@@ -223,9 +223,9 @@ inline void cTranslatorCreate::TranlateCreate(string input)
 		{
 			typeOfCreate = BTREE;
 		}
-		else if (input.find("RTREE", position) == position)
+		else if (input.find("CLUSTERED_INDEX", position) == position)
 		{
-			typeOfCreate = RTREE;
+			typeOfCreate = CLUSTERED_INDEX;
 		}
 		else
 		{
@@ -326,7 +326,7 @@ inline cSpaceDescriptor * cTranslatorCreate::CreateVarSpaceDescriptor()
 		}
 
 		//ptr[i] = new cInt();// cBasicType<cDataType*>::GetType("INT");
-		SD = new cSpaceDescriptor(columns->size(), new cNTuple(), ptr, false);//SD tuplu
+		SD = new cSpaceDescriptor(columns->size(), new cHNTuple(), ptr, false);//SD tuplu
 	}
 	else
 	{
@@ -344,7 +344,7 @@ inline cSpaceDescriptor * cTranslatorCreate::CreateVarSpaceDescriptor()
 		SD = new cSpaceDescriptor(columns->size()+1, new cTuple(), ptr, false);//SD tuplu
 		*/
 
-		SD = new cSpaceDescriptor(columns->size(), new cNTuple(), columns->at(0)->cType, false);//SD tuplu
+		SD = new cSpaceDescriptor(columns->size(), new cHNTuple(), columns->at(0)->cType, false);//SD tuplu
 	}
 	return SD;
 }
@@ -414,7 +414,7 @@ inline cSpaceDescriptor * cTranslatorCreate::CreateVarKeySpaceDescriptor()
 	}
 
 	ptr[1] = new cInt();
-	keySD = new cSpaceDescriptor(2, new cNTuple(), ptr, false);
+	keySD = new cSpaceDescriptor(2, new cHNTuple(), ptr, false);
 
 
 	return keySD;
