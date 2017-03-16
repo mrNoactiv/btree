@@ -257,21 +257,21 @@ int main()
 	*/
 
 	cDataType *typ[] = { new cInt(), homoTuple };
-	cSpaceDescriptor * kokotSD = new cSpaceDescriptor(2, new cHNTuple(), typ, false);
-	cHNTuple *kurvafix = new cHNTuple();
-	kokotSD->SetDimSpaceDescriptor(1, homoSD);
-	kurvafix->Resize(kokotSD);
+	cSpaceDescriptor * chnSD = new cSpaceDescriptor(2, new cHNTuple(), typ, false);
+	cHNTuple *chnTuple = new cHNTuple();
+	chnSD->SetDimSpaceDescriptor(1, homoSD);
+	chnTuple->Resize(chnSD);
 
 
-	kurvafix->SetValue(0, 514515, kokotSD);
-	kurvafix->SetValue(1, *homoTuple, kokotSD);
+	chnTuple->SetValue(0, 514515, chnSD);
+	chnTuple->SetValue(1, *homoTuple, chnSD);
 
 
-	int picafix = kurvafix->GetInt(0, kokotSD);
-	char * kokotTempTuple = kurvafix->GetNTuple(1, kokotSD);
+	int chnInt = chnTuple->GetInt(0, chnSD);
+	char * chnTempTuple = chnTuple->GetNTuple(1, chnSD);
 	for (int i = 0; i < homoTuple->GetDimension(homoSD); i++)
 	{
-		stringVal->push_back(cCommonNTuple<char>::GetCChar(kokotTempTuple, i, homoSD));
+		stringVal->push_back(cCommonNTuple<char>::GetCChar(chnTempTuple, i, homoSD));
 		//temchar= cCommonNTuple<char>::GetCChar(TEMPTuple, i, SDHetStr);
 	}
 	for (int i = 0; i < stringVal->size(); i++)
